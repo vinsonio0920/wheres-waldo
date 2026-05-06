@@ -1,14 +1,21 @@
-import { render, screen } from "@testing-library/react";
-import { describe, it } from "vitest";
+// tests React of App component
 
+import { describe, expect, it } from "vitest";
 import App from "./App";
+import { render, screen } from "@testing-library/react";
 
-describe("App", () => {
-  it("renders headline", () => {
-    render(<App title="React" />);
+describe("App component", () => {
+  it("Renders header correctly", () => {
+    render(<App />);
 
-    screen.debug();
+    // header
+    expect(screen.getByRole("banner")).toBeInTheDocument();
 
-    // check if App components renders headline
+    const header = screen.getByRole("banner");
+    expect(header.getByRole("heading").textContent).toMatch(/Sniper/i);
+    expect(
+      header.getByRole("link", { name: /Attributions/i }),
+    ).toBeInTheDocument();
+    expect(header.getByRole("link", { name: /Home/i })).toBeInTheDocument();
   });
 });
