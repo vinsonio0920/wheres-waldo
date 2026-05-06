@@ -3,19 +3,22 @@
 import { describe, expect, it } from "vitest";
 import App from "./App";
 import { render, screen } from "@testing-library/react";
+import { MemoryRouter } from "react-router-dom";
 
 describe("App component", () => {
   it("Renders header correctly", () => {
-    render(<App />);
+    render(
+      <MemoryRouter>
+        <App />
+      </MemoryRouter>,
+    );
 
     // header
     expect(screen.getByRole("banner")).toBeInTheDocument();
-
-    const header = screen.getByRole("banner");
-    expect(header.getByRole("heading").textContent).toMatch(/Sniper/i);
+    expect(screen.getByRole("heading").textContent).toMatch(/Sniper/i);
     expect(
-      header.getByRole("link", { name: /Attributions/i }),
+      screen.getByRole("link", { name: /Attributions/i }),
     ).toBeInTheDocument();
-    expect(header.getByRole("link", { name: /Home/i })).toBeInTheDocument();
+    expect(screen.getByRole("link", { name: /Missions/i })).toBeInTheDocument();
   });
 });
