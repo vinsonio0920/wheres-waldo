@@ -1,4 +1,4 @@
-// Tests the routing of the app
+// Tests the routing of the app (integration)
 
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { describe, expect, test } from "vitest";
@@ -14,8 +14,6 @@ describe("Full app rendering and navigation", () => {
     expect(screen.getByRole("banner")).toBeInTheDocument();
 
     expect(screen.getByRole("list", { name: /missions/i })).toBeInTheDocument();
-    // expect(screen.getByRole("list", { name: /targets/i })).toBeInTheDocument();
-    // when hovered, maybe also show a list of targets to find
   });
 
   // add test for error 404 later
