@@ -14,6 +14,7 @@ describe("Mission component", () => {
         loader: () => ({
           data: [
             {
+              id: 1,
               image:
                 "https://wl-brightside.cf.tsp.li/resize/728x/webp/bc7/1e0/ee75f05dbeb672d491c06f8c2f.jpg.webp",
               mission: "Find the panda among the raccoons",
@@ -27,6 +28,7 @@ describe("Mission component", () => {
               type: "single",
             },
             {
+              id: 2,
               image: "https://i.redd.it/ihi87vu0yk8f1.jpeg",
               mission: "Find the 3 gymnasts",
               targets: [
@@ -49,6 +51,7 @@ describe("Mission component", () => {
               type: "multiple similar",
             },
             {
+              id: 3,
               image: "https://i.redd.it/wdsa4yue626g1.jpeg",
               mission: "Find both crocs (shoe and animal)",
               targets: [
@@ -92,7 +95,15 @@ describe("Mission component", () => {
 
   // empty loader data
   it("Renders empty mission list correctly", () => {
-    const mockRoutes = [];
+    const mockRoutes = [
+      {
+        path: "/",
+        element: <Missions />,
+        loader: () => ({
+          data: [],
+        }),
+      },
+    ];
 
     const router = createMemoryRouter(mockRoutes, { initialEntries: ["/"] });
 
@@ -122,6 +133,6 @@ describe("Mission component", () => {
 
     render(<RouterProvider router={router} />);
 
-    expect(screen.getByText()).toBeInTheDocument();
+    expect(screen.getByText(mockRoutes.error.message)).toBeInTheDocument();
   });
 });
