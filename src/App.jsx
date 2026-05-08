@@ -1,18 +1,18 @@
 import { Link, Outlet } from "react-router-dom";
 import { logoSvg } from "./assets";
-import "./App.css";
+import styles from "./App.module.css";
 
 function App() {
   return (
     <>
-      <header>
-        <Link to="/">
+      <header className={styles.header}>
+        <Link to="/" className={styles.logoLink}>
           <h1>
             <img src={logoSvg} alt="Logo" width="30" />
             Sniper
           </h1>
         </Link>
-        <div>
+        <div className={styles.rightLinks}>
           <Link to="/attributions">Attributions</Link>
           <Link to="/">Missions</Link>
         </div>

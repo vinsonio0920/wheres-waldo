@@ -1,0 +1,35 @@
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 1rem clamp(1.5rem, 4vw, 2.5rem);
+  border-bottom: 1px solid rgb(188, 188, 188);
+}
+
+.header a {
+  text-decoration: none;
+  color: #000;
+}
+
+.logoLink {
+  font-family: "norwester", Arial, Helvetica, sans-serif;
+}
+
+.logoLink h1 {
+  font-weight: 600;
+  font-size: 2rem;
+}
+
+.logoLink h1 img {
+  margin-right: 0.5rem;
+}
+
+@media (min-width: 500px) {
+  .rightLinks *:not(:last-child) {
+    margin-right: clamp(1rem, 4vw, 1.5rem);
+  }
+
+  .rightLinks *:hover {
+    text-decoration: underline;
+  }
+}
