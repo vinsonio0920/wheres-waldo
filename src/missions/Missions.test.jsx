@@ -3,7 +3,7 @@ import { Missions } from "./Missions";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { render, screen, within } from "@testing-library/react";
 
-describe("Mission component", () => {
+describe("Missions component", () => {
   // successful loader data with missions
   it("Renders mission list correctly", async () => {
     // main thing here is that we're mocking the loader data!
