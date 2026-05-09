@@ -29,7 +29,7 @@ function App() {
             <span className="material-symbols-outlined">menu</span>
           </button>
           <ul
-            className={`${styles.rightLinks} ${showDropdown && styles.opened}`}
+            className={`${styles.rightLinks} ${showDropdown ? styles.opened : ""}`}
             aria-label="Menu dropdown"
           >
             <li>

@@ -24,7 +24,69 @@
   margin-right: 0.5rem;
 }
 
+.menuButton {
+  padding: 0.25rem 0.5rem;
+}
+
+.menuButton:hover {
+  background-color: #f6f6f6;
+}
+
+.menuButton:active {
+  background-color: #ebebeb;
+}
+
+.rightLinks {
+  display: none;
+}
+
+body:has(.rightLinks.opened) {
+  overflow: hidden;
+}
+
+.opened {
+  position: absolute;
+  top: 4.25rem;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  flex-direction: column;
+  background-color: #fff;
+  z-index: 99;
+}
+
+.opened li {
+  text-align: center;
+  font-size: 1.1rem;
+  width: 100%;
+}
+
+.opened li a {
+  display: block;
+  padding: 1.25rem;
+}
+
+.opened li a:hover {
+  background-color: #f6f6f6;
+}
+
 @media (min-width: 500px) {
+  .menuButton {
+    display: none;
+  }
+
+  .rightLinks {
+    position: static;
+    display: flex;
+    flex-direction: row;
+  }
+
+  .rightLinks li a {
+    display: block;
+    padding: 0;
+  }
+
   .rightLinks *:not(:last-child) {
     margin-right: clamp(1rem, 4vw, 1.5rem);
   }

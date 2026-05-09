@@ -4,16 +4,12 @@ import { describe, expect, it } from "vitest";
 import App from "./App";
 import { render, screen, within } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import UserEvent from "@testing-library/user-event";
-import { setScreenSize } from "../tests/utils";
 
+// NOTE: We do not test CSS media queries (display: none) here
 describe("App component", () => {
   const dropdownLinks = ["Attributions", "Missions"];
 
-  it("Renders mobile header correctly", async () => {
-    setScreenSize(300);
-    const user = UserEvent.setup();
-
+  it("Renders header correctly", async () => {
     render(
       <MemoryRouter>
         <App />
@@ -26,8 +22,9 @@ describe("App component", () => {
 
     const menuButton = screen.getByRole("button", { name: /^Menu$/i });
     expect(menuButton).toBeInTheDocument();
-    expect(screen.queryByRole("list", { name: /^Menu dropdown$/i })).toBeNull();
-    await user.click(menuButton);
+    expect(
+      screen.getByRole("list", { name: /^Menu dropdown$/i }),
+    ).toBeInTheDocument();
 
     const menuDropdown = screen.queryByRole("list", {
       name: /^Menu dropdown$/i,
@@ -36,24 +33,5 @@ describe("App component", () => {
     expect(within(menuDropdown).getAllByRole("listitem")).toHaveLength(
       dropdownLinks.length,
     );
-  });
-
-  it("Renders desktop header correctly", () => {
-    render(
-      <MemoryRouter>
-        <App />
-      </MemoryRouter>,
-    );
-
-    // header
-    expect(screen.getByRole("banner")).toBeInTheDocument();
-    expect(screen.getByRole("heading").textContent).toMatch(/Sniper/i);
-    expect(
-      screen.getByRole("link", { name: /Attributions/i }),
-    ).toBeInTheDocument();
-    expect(screen.getByRole("link", { name: /Missions/i })).toBeInTheDocument();
-
-    expect(screen.queryByRole("button", { name: /^Menu$/i })).toBeNull();
-    expect(screen.queryByRole("list", { name: /^Menu dropdown$/i })).toBeNull();
   });
 });
