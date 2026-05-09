@@ -1,4 +1,4 @@
-import { useLoaderData } from "react-router-dom";
+import { Link, useLoaderData } from "react-router-dom";
 import styles from "./Missions.module.css";
 
 const Missions = () => {
@@ -12,6 +12,7 @@ const Missions = () => {
     >
       {result.data.map((mission) => (
         <li key={mission.id} className={styles.missionLi}>
+          <Link to={`/missions/${mission.id}`}></Link>
           <img src={mission.image} alt="Mission picture" width={300} />
           <p>Targets: {mission.targets.length}</p>
         </li>

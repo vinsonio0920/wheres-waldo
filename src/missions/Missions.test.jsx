@@ -83,7 +83,13 @@ describe("Mission component", () => {
     const missions = within(missionList).getAllByRole("listitem");
     expect(missions).toHaveLength(3);
 
-    missions.forEach((mission) => {
+    // we use index since it fits with the mock data ids
+    missions.forEach((mission, index) => {
+      expect(within(mission).getByRole("link")).toBeInTheDocument();
+      expect(within(mission).getByRole("link")).toHaveAttribute(
+        "href",
+        `/missions/${index + 1}`,
+      );
       expect(
         within(mission).getByRole("img", { name: /^Mission picture$/i }),
       ).toBeInTheDocument();
