@@ -1,3 +1,29 @@
+.errorContainer,
+.emptyContainer {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  min-height: calc(100vh - 4.25rem);
+}
+
+.errorContainer p {
+  color: #ff0000;
+  margin-top: -8rem;
+}
+
+.emptyContainer div {
+  text-align: center;
+  margin-top: -8rem;
+}
+
+.emptyContainer h1 {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 1rem;
+}
+
+/* Mission List */
+
 .missionUl {
   display: grid;
   grid-template-columns: 1fr;

@@ -98,7 +98,7 @@ describe("Mission component", () => {
   });
 
   // empty loader data
-  it("Renders empty mission list correctly", () => {
+  it("Renders empty mission list correctly", async () => {
     const mockRoutes = [
       {
         path: "/",
@@ -114,22 +114,24 @@ describe("Mission component", () => {
     render(<RouterProvider router={router} />);
 
     expect(
-      screen.getByRole("heading", { name: /^No missions yet$./i }),
+      await screen.findByRole("heading", { name: /^No missions yet$/i }),
     ).toBeInTheDocument();
     expect(screen.getByText(/^New missions will come, check back soon.$/i));
   });
 
   // error loader data
-  it("Renders empty mission list correctly", () => {
+  it("Renders error correctly", async () => {
     const mockRoutes = [
       {
         path: "/",
         element: <Missions />,
-        error: {
-          code: 500,
-          message:
-            "There was an error fetching the missions. Please try again later.",
-        },
+        loader: () => ({
+          error: {
+            code: 500,
+            message:
+              "There was an error fetching the missions. Please try again later.",
+          },
+        }),
       },
     ];
 
@@ -137,6 +139,10 @@ describe("Mission component", () => {
 
     render(<RouterProvider router={router} />);
 
-    expect(screen.getByText(mockRoutes.error.message)).toBeInTheDocument();
+    expect(
+      await screen.findByText(
+        "There was an error fetching the missions. Please try again later.",
+      ),
+    ).toBeInTheDocument();
   });
 });

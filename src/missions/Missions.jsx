@@ -4,6 +4,24 @@ import styles from "./Missions.module.css";
 const Missions = () => {
   const result = useLoaderData();
 
+  if (result.error) {
+    return (
+      <div className={styles.errorContainer}>
+        <p>{result.error.message}</p>
+      </div>
+    );
+  }
+  if (result.data.length <= 0) {
+    return (
+      <div className={styles.emptyContainer}>
+        <div>
+          <h1>No missions yet</h1>
+          <p>New missions will come, check back soon.</p>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <ul
       className="missionList"
