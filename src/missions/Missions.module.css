@@ -1,0 +1,50 @@
+.missionUl {
+  display: grid;
+  grid-template-columns: 1fr;
+  max-width: 67.5rem;
+  gap: 1.5rem;
+  padding: 1rem;
+  margin: 0 auto;
+}
+
+.missionLi {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  border-radius: 15px;
+  box-shadow:
+    rgba(0, 0, 0, 0.1) 0px 0px 5px 0px,
+    rgba(0, 0, 0, 0.1) 0px 0px 1px 0px;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
+}
+
+.missionLi:hover {
+  cursor: pointer;
+  transform: translateY(-0.25rem);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+}
+
+.missionLi img {
+  display: block;
+  object-fit: cover;
+  border-top-right-radius: 15px;
+  border-top-left-radius: 15px;
+  width: 100%;
+  max-width: 30.5rem;
+  height: 14rem;
+}
+
+.missionLi p {
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 500;
+  padding: 1rem;
+}
+
+@media (min-width: 480px) {
+  .missionUl {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}

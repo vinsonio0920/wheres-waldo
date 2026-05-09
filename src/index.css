@@ -169,6 +169,10 @@ html {
 
 /* Main */
 
+body {
+  background-color: #fafafa;
+}
+
 button {
   border: none;
   background-color: transparent;

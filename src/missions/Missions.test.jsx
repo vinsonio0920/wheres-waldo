@@ -85,11 +85,9 @@ describe("Mission component", () => {
 
     missions.forEach((mission) => {
       expect(
-        within(mission).getByRole("img", { name: /Mission picture/i }),
+        within(mission).getByRole("img", { name: /^Mission picture$/i }),
       ).toBeInTheDocument();
-      expect(
-        within(mission).getByRole("paragraph", { name: /Targets/i }),
-      ).toBeInTheDocument();
+      expect(within(mission).getByText(/Targets/i)).toBeInTheDocument();
     });
   });
 
