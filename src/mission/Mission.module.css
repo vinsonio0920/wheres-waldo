@@ -53,12 +53,17 @@
 
 .leaderboardTable thead {
   background-color: #f3f3f3;
-  border-bottom: 2px solid #e2e9f0;
+  border-bottom: 3px solid #e2e9f0;
 }
 
 .leaderboardTable tr {
   display: flex;
   width: 100%;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.leaderboardTable tr:last-of-type {
+  border-bottom: none;
 }
 
 .leaderboardTable th {
@@ -108,6 +113,7 @@
 
 .dateTh,
 .dateTd {
+  flex: 1;
   display: none;
 }
 
@@ -115,10 +121,30 @@
   display: block;
   font-size: 1rem;
   font-weight: 500;
+  background-color: #f3f3f3;
+  padding: 0.5rem 1rem;
   margin: 1rem auto 0 auto;
 }
 
+.showMoreButton:hover {
+  background-color: #e1e1e1;
+}
+
+.showMoreButton:active {
+  background-color: #f3f3f3;
+}
+
 @media (min-width: 600px) {
+  .leaderboardContainer {
+    max-width: 56.25rem;
+    margin: 5rem auto 0 auto;
+    padding: 1.25rem;
+  }
+
+  .leaderboardHeading {
+    padding-bottom: 1.5rem;
+  }
+
   .leaderboardTable th,
   .leaderboardTable td {
     padding: 1rem;
@@ -131,6 +157,11 @@
   .leaderboardTable td {
     font-size: 1rem;
   }
+
+  .dateTh,
+  .dateTd {
+    display: block;
+  }
 }
 
 @media (min-width: 800px) {
@@ -141,5 +172,11 @@
   .imageContainer img {
     max-width: 100%;
     height: auto;
+  }
+}
+
+@media (min-width: 900px) {
+  .leaderboardContainer {
+    margin-bottom: 3rem;
   }
 }
