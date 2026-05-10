@@ -74,7 +74,32 @@ const routes = [
         path: "/missions/:missionId",
         element: <Mission />,
         loader: () => ({
-          data: [],
+          data: {
+            id: 1,
+            image:
+              "https://wl-brightside.cf.tsp.li/resize/728x/webp/bc7/1e0/ee75f05dbeb672d491c06f8c2f.jpg.webp",
+            mission: "Find the panda among the raccoons",
+            targets: [
+              {
+                targetName: "Panda",
+                location: null,
+                sniped: false,
+              },
+            ],
+            type: "single",
+            leaderboard: [
+              { name: "Anon", time: "1", date: "Test" },
+              { name: "Anon", time: "2", date: "Test" },
+              { name: "Anon", time: "3", date: "Test" },
+              { name: "Anon", time: "4", date: "Test" },
+              { name: "Anon", time: "5", date: "Test" },
+              { name: "Anon", time: "6", date: "Test" },
+              { name: "Anon", time: "7", date: "Test" },
+              { name: "Anon", time: "8", date: "Test" },
+              { name: "Anon", time: "9", date: "Test" },
+              { name: "Anon", time: "10", date: "Test" },
+            ],
+          },
         }),
       },
     ],

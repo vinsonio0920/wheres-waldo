@@ -35,7 +35,6 @@ describe("Mission component", () => {
               { name: "Anon", time: "1", date: "Test" },
               { name: "Anon", time: "1", date: "Test" },
               { name: "Anon", time: "1", date: "Test" },
-              { name: "Anon", time: "1", date: "Test" },
             ],
           },
         }),
@@ -43,7 +42,7 @@ describe("Mission component", () => {
     ];
 
     const router = createMemoryRouter(mockRoutes, {
-      initialEntries: [".missions/1"],
+      initialEntries: ["/missions/1"],
     });
 
     render(<RouterProvider router={router} />);
@@ -51,7 +50,7 @@ describe("Mission component", () => {
     // mission
     expect(
       await screen.findByRole("heading", {
-        name: /^Mission: Find the panda amon the racoons$/i,
+        name: /Find the panda among the raccoons/i,
       }),
     ).toBeInTheDocument();
     expect(
@@ -60,12 +59,19 @@ describe("Mission component", () => {
     expect(await screen.findByTestId("click-result"));
 
     // leaderboard
-    const leaderboard = await screen.getByRole("list", {
-      name: /^Leaderboard$/i,
+    expect(
+      screen.getByRole("heading", { name: /^Leaderboard$/i }),
+    ).toBeInTheDocument();
+
+    const leaderboardTable = screen.getByRole("table", {
+      name: /^Leaderboard table$/i,
     });
-    const moreButton = within(leaderboard).getByRole("button", { name: /^$/i });
-    expect(leaderboard).toBeInTheDocument();
-    expect(leaderboard).toHaveLength(10);
+    const tableRows = within(leaderboardTable).getAllByRole("row");
+    const moreButton = screen.getByRole("button", { name: /^Show More$/i });
+
+    expect(leaderboardTable).toBeInTheDocument();
+    // all rows in tbody + thead row
+    expect(tableRows).toHaveLength(11);
     expect(moreButton).toBeInTheDocument();
   });
 
@@ -91,16 +97,15 @@ describe("Mission component", () => {
             type: "single",
             leaderboard: [
               { name: "Anon", time: "1", date: "Test" },
-              { name: "Anon", time: "1", date: "Test" },
-              { name: "Anon", time: "1", date: "Test" },
-              { name: "Anon", time: "1", date: "Test" },
-              { name: "Anon", time: "1", date: "Test" },
-              { name: "Anon", time: "1", date: "Test" },
-              { name: "Anon", time: "1", date: "Test" },
-              { name: "Anon", time: "1", date: "Test" },
-              { name: "Anon", time: "1", date: "Test" },
-              { name: "Anon", time: "1", date: "Test" },
-              { name: "Anon", time: "1", date: "Test" },
+              { name: "Anon", time: "2", date: "Test" },
+              { name: "Anon", time: "3", date: "Test" },
+              { name: "Anon", time: "4", date: "Test" },
+              { name: "Anon", time: "5", date: "Test" },
+              { name: "Anon", time: "6", date: "Test" },
+              { name: "Anon", time: "7", date: "Test" },
+              { name: "Anon", time: "8", date: "Test" },
+              { name: "Anon", time: "9", date: "Test" },
+              { name: "Anon", time: "10", date: "Test" },
             ],
           },
         }),
@@ -108,18 +113,33 @@ describe("Mission component", () => {
     ];
 
     const router = createMemoryRouter(mockRoutes, {
-      initialEntries: [".missions/1"],
+      initialEntries: ["/missions/1"],
     });
 
     render(<RouterProvider router={router} />);
 
-    const leaderboard = await screen.getByRole("list", {
-      name: /^Leaderboard$/i,
+    // leaderboard
+    expect(
+      await screen.findByRole("heading", { name: /^Leaderboard$/i }),
+    ).toBeInTheDocument();
+
+    const leaderboardTable = screen.getByRole("table", {
+      name: /^Leaderboard table$/i,
     });
-    const moreButton = within(leaderboard).getByRole("button", { name: /^$/i });
-    expect(leaderboard).toBeInTheDocument();
-    expect(leaderboard).toHaveLength(10);
+    const tableRows = within(leaderboardTable).getAllByRole("row");
+    const moreButton = screen.getByRole("button", { name: /^Show More$/i });
+
+    expect(leaderboardTable).toBeInTheDocument();
+    // all rows in tbody + thead row
+    expect(tableRows).toHaveLength(11);
     expect(moreButton).toBeInTheDocument();
+
+    await user.click(moreButton);
+
+    expect(within(leaderboardTable).getAllByRole("row")).toHaveLength(21);
+    expect(
+      screen.queryByRole("button", { name: /^Show More$/i }),
+    ).not.toBeInTheDocument();
   });
 
   it("Renders error correctly", () => {});
