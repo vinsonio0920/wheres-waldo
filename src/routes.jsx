@@ -88,7 +88,7 @@ const routes = [
             ],
             type: "single",
             leaderboard: [
-              { name: "Anon", time: "1", date: "Test" },
+              { name: "AnononyMouseLol123344", time: "1", date: "Test" },
               { name: "Anon", time: "2", date: "Test" },
               { name: "Anon", time: "3", date: "Test" },
               { name: "Anon", time: "4", date: "Test" },

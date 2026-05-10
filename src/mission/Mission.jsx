@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useLoaderData } from "react-router-dom";
+import styles from "./Mission.module.css";
 
 const Mission = () => {
   const result = useLoaderData();
@@ -24,36 +25,56 @@ const Mission = () => {
 
   return (
     <>
-      <h1>Mission:{data.mission}</h1>
-      <div>
-        <img src={data.image} width={300} alt="Mission picture" />
-        <p data-testid="click-result"></p>
+      <h1 className={styles.missionHeading}>Mission: {data.mission}</h1>
+      <div className={styles.imageContainer}>
+        <img src={data.image} alt="Mission picture" />
       </div>
+      <p
+        data-testid="click-result"
+        className={`${styles.resultPara} ${styles.failure}`}
+      >
+        There is nothing here.
+      </p>
       <p>NOTE: </p>
-      <div>
-        <h2>Leaderboard</h2>
-        <table aria-label="Leaderboard table">
+      <div className={styles.leaderboardContainer}>
+        <h2 className={styles.leaderboardHeading}>Leaderboard</h2>
+        <table
+          aria-label="Leaderboard table"
+          className={styles.leaderboardTable}
+        >
           <thead>
             <tr>
-              <th scope="col">Rank</th>
-              <th scope="col">Player</th>
-              <th scope="col">Time</th>
-              <th scope="col">Date</th>
+              <th scope="col" className={styles.rankTh}>
+                Rank
+              </th>
+              <th scope="col" className={styles.playerTh}>
+                Player
+              </th>
+              <th scope="col" className={styles.timeTh}>
+                Time
+              </th>
+              <th scope="col" className={styles.dateTh}>
+                Date
+              </th>
             </tr>
           </thead>
           <tbody>
             {leaderboard.map((entry, index) => (
               <tr key={entry.time}>
-                <td>{index + 1}</td>
-                <td>{entry.name}</td>
-                <td>{entry.time}</td>
-                <td>{entry.date}</td>
+                <td className={styles.rankTd}>{index + 1}</td>
+                <td className={styles.playerTd}>{entry.name}</td>
+                <td className={styles.timeTd}>{entry.time}s</td>
+                <td className={styles.dateTd}>{entry.date}</td>
               </tr>
             ))}
           </tbody>
         </table>
         {leaderboard.length < 20 && (
-          <button type="button" onClick={handleButtonClick}>
+          <button
+            type="button"
+            onClick={handleButtonClick}
+            className={styles.showMoreButton}
+          >
             Show more
           </button>
         )}
