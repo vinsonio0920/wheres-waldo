@@ -2,18 +2,66 @@ import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import styles from "./Mission.module.css";
 
-const TargetDropdown = ({ targets, dropdownCoordinates }) => {
+const TargetDropdown = ({
+  targets,
+  setTargets,
+  dropdownCoordinates,
+  clickCoordinates,
+}) => {
+  const handleTargetClick = (event) => {
+    const clickedTarget = targets.find(
+      (target) => target.key === event.currentTarget.dataset.key,
+    );
+
+    let targetFound = false;
+    clickedTarget.locations.forEach((location) => {
+      // check if the click is inside one of the target's box
+      const isInsideX =
+        location[0][0] <= clickCoordinates[0] &&
+        clickCoordinates[0] <= location[0][1];
+      const isInsideY =
+        location[1][0] <= clickCoordinates[1] &&
+        clickCoordinates[1] <= location[1][1];
+
+      if (isInsideX && isInsideY) {
+        targetFound = true;
+
+        const newTargets = targets.map((target) => {
+          if (target.key === event.currentTarget.dataset.key) {
+            return {
+              ...target,
+              sniped: true,
+            };
+          } else {
+            return target;
+          }
+        });
+        setTargets(newTargets);
+      }
+    });
+
+    // error handling
+    if (targetFound) return;
+    console.log("error");
+  };
+
   return (
     <ul
       className={styles.targetDropdown}
       style={{
-        left: dropdownCoordinates[0] + 55,
-        top: dropdownCoordinates[1] + 13,
+        left: dropdownCoordinates[0],
+        top: dropdownCoordinates[1],
       }}
     >
       {targets.map((target) => (
         <li key={target.key}>
-          <button type="button">{target.targetName}</button>
+          <button
+            type="button"
+            onClick={handleTargetClick}
+            data-key={target.key}
+          >
+            {target.targetName}
+          </button>
         </li>
       ))}
     </ul>
@@ -24,16 +72,26 @@ const Mission = () => {
   const result = useLoaderData();
   const [leaderboard, setLeaderboard] = useState(result.data.leaderboard);
   const [showTargetDropdown, setShowTargetDropdown] = useState(false);
+  // the position that the dropdown should be shown (relative to the imageContainer)
   const [dropdownCoordinates, setDropdownCoordinates] = useState([0, 0]);
+  // the coordinate that was clicked on the image
+  const [clickCoordinates, setClickCoordinates] = useState([0, 0]);
+  const [targets, setTargets] = useState(result.data.targets);
 
   useEffect(() => {
     const handleClick = (event) => {
       if (event.target.classList.contains("missionPicture")) {
-        const rect = event.target.getBoundingClientRect();
+        const containerRect = event.target.parentNode.getBoundingClientRect();
+        const imageRect = event.target.getBoundingClientRect();
+
         setShowTargetDropdown(true);
         setDropdownCoordinates([
-          event.clientX - rect.left,
-          event.clientY - rect.top,
+          event.clientX - containerRect.left,
+          event.clientY - containerRect.top,
+        ]);
+        setClickCoordinates([
+          event.clientX - imageRect.left,
+          event.clientY - imageRect.top,
         ]);
       } else {
         setShowTargetDropdown(false);
@@ -70,8 +128,10 @@ const Mission = () => {
       <div className={styles.imageContainer}>
         {showTargetDropdown && (
           <TargetDropdown
-            targets={data.targets}
+            targets={targets}
+            setTargets={setTargets}
             dropdownCoordinates={dropdownCoordinates}
+            clickCoordinates={clickCoordinates}
           />
         )}
         <img

@@ -203,9 +203,9 @@ describe("Mission component", () => {
     expect(within(targetDropdown).getAllByRole("listitem")).toHaveLength(1);
   });
 
-  it("Renders error correctly", () => {});
-
-  it("Renders form correctly", () => {
+  it("Renders form modal correctly", () => {
     // also tests for error and correct notification
   });
+
+  it("Renders error correctly", () => {});
 });

@@ -83,7 +83,27 @@ const routes = [
               {
                 key: "82a91656-fb51-4c56-bc6b-9393ac968fef",
                 targetName: "Panda",
-                location: null,
+                // array of boxes, these are the possible click areas!
+                locations: [
+                  // ears (left, right)
+                  [
+                    [166, 203],
+                    [118, 152],
+                  ],
+                  [
+                    [251, 286],
+                    [116, 152],
+                  ],
+                  // face
+                  [
+                    [185, 271],
+                    [127, 156],
+                  ],
+                  [
+                    [176, 244],
+                    [155, 233],
+                  ],
+                ],
                 sniped: false,
               },
             ],

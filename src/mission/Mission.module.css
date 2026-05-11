@@ -19,7 +19,9 @@
 }
 
 .imageContainer img:hover {
-  cursor: url("../assets/hover.svg"), pointer;
+  cursor:
+    url("../assets/hover.svg") 10 12,
+    pointer;
 }
 
 .targetDropdown {
