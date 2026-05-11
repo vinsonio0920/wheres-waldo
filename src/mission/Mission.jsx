@@ -52,6 +52,7 @@ const TargetDropdown = ({
         left: dropdownCoordinates[0],
         top: dropdownCoordinates[1],
       }}
+      aria-label="Target dropdown"
     >
       {targets.map((target) => (
         <li key={target.key}>
