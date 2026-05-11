@@ -81,6 +81,7 @@ const routes = [
             mission: "Find the panda among the raccoons",
             targets: [
               {
+                key: "82a91656-fb51-4c56-bc6b-9393ac968fef",
                 targetName: "Panda",
                 location: null,
                 sniped: false,

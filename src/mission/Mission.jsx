@@ -1,10 +1,51 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import styles from "./Mission.module.css";
+
+const TargetDropdown = ({ targets, dropdownCoordinates }) => {
+  return (
+    <ul
+      className={styles.targetDropdown}
+      style={{
+        left: dropdownCoordinates[0] + 55,
+        top: dropdownCoordinates[1] + 13,
+      }}
+    >
+      {targets.map((target) => (
+        <li key={target.key}>
+          <button type="button">{target.targetName}</button>
+        </li>
+      ))}
+    </ul>
+  );
+};
 
 const Mission = () => {
   const result = useLoaderData();
   const [leaderboard, setLeaderboard] = useState(result.data.leaderboard);
+  const [showTargetDropdown, setShowTargetDropdown] = useState(false);
+  const [dropdownCoordinates, setDropdownCoordinates] = useState([0, 0]);
+
+  useEffect(() => {
+    const handleClick = (event) => {
+      if (event.target.classList.contains("missionPicture")) {
+        const rect = event.target.getBoundingClientRect();
+        setShowTargetDropdown(true);
+        setDropdownCoordinates([
+          event.clientX - rect.left,
+          event.clientY - rect.top,
+        ]);
+      } else {
+        setShowTargetDropdown(false);
+      }
+    };
+
+    window.addEventListener("click", handleClick);
+
+    return () => {
+      window.removeEventListener("click", handleClick);
+    };
+  }, []);
 
   const data = result.data;
 
@@ -27,15 +68,26 @@ const Mission = () => {
     <>
       <h1 className={styles.missionHeading}>Mission: {data.mission}</h1>
       <div className={styles.imageContainer}>
-        <img src={data.image} alt="Mission picture" />
+        {showTargetDropdown && (
+          <TargetDropdown
+            targets={data.targets}
+            dropdownCoordinates={dropdownCoordinates}
+          />
+        )}
+        <img
+          src={data.image}
+          alt="Mission picture"
+          className="missionPicture"
+        />
       </div>
       <p
         data-testid="click-result"
         className={`${styles.resultPara} ${styles.failure}`}
-      >
-        There is nothing here.
+      ></p>
+      <p>
+        NOTE: Pagination is currently mocked. After the backend is implemented
+        we will make it work!
       </p>
-      <p>NOTE: </p>
       <div className={styles.leaderboardContainer}>
         <h2 className={styles.leaderboardHeading}>Leaderboard</h2>
         <table

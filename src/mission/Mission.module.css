@@ -6,6 +6,7 @@
 }
 
 .imageContainer {
+  position: relative;
   width: 100vw;
   overflow: auto;
 }
@@ -17,10 +18,42 @@
   margin: 0 auto;
 }
 
+.imageContainer img:hover {
+  cursor: url("../assets/hover.svg"), pointer;
+}
+
+.targetDropdown {
+  position: absolute;
+  background-color: #fff;
+  border-radius: var(--main-border-radius);
+  box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
+  width: 11.25rem;
+  overflow: hidden;
+  z-index: 9;
+}
+
+.targetDropdown button {
+  display: block;
+  line-height: 1.5;
+  font-size: 1.1rem;
+  width: 100%;
+  padding: 0.5rem 0.75rem;
+}
+
+.targetDropdown button:hover {
+  background-color: var(--button-hover);
+  border-radius: 0;
+}
+
+.targetDropdown button:active {
+  background-color: var(--button-active);
+}
+
 .resultPara {
   text-align: center;
   font-size: 1.5rem;
   font-weight: 500;
+  min-height: 1.5rem;
   margin-top: 1rem;
 }
 
@@ -36,7 +69,7 @@
   margin: 1rem;
   background-color: #fff;
   box-shadow: rgba(0, 0, 0, 0.24) 0px 3px 8px;
-  border-radius: 15px;
+  border-radius: var(--main-border-radius);
   padding: 0.5rem;
 }
 
@@ -121,17 +154,17 @@
   display: block;
   font-size: 1rem;
   font-weight: 500;
-  background-color: #f3f3f3;
+  background-color: var(--button-hover);
   padding: 0.5rem 1rem;
   margin: 1rem auto 0 auto;
 }
 
 .showMoreButton:hover {
-  background-color: #e1e1e1;
+  background-color: var(--button-active);
 }
 
 .showMoreButton:active {
-  background-color: #f3f3f3;
+  background-color: var(--button-hover);
 }
 
 @media (min-width: 600px) {

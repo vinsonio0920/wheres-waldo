@@ -169,6 +169,12 @@ html {
 
 /* Main */
 
+:root {
+  --button-hover: #f3f3f3;
+  --button-active: #e1e1e1;
+  --main-border-radius: 15px;
+}
+
 body {
   background-color: #fafafa;
 }
