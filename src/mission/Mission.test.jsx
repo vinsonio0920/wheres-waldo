@@ -206,8 +206,56 @@ describe("Mission component", () => {
     ).not.toBeInTheDocument();
   });
 
-  it("Renders form modal correctly", () => {
+  it("Renders completion modal correctly", async () => {
     // also tests for error and correct notification
+    const user = UserEvent.setup();
+
+    render(<RouterProvider router={router} />);
+
+    // Check for elements
+    const missionPicture = await screen.findByRole("img", {
+      name: /^Mission picture$/i,
+    });
+    expect(missionPicture).toBeInTheDocument();
+    expect(screen.getByTestId("click-result")).toBeEmptyDOMElement();
+    expect(screen.queryByRole("form")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("overlay")).not.toBeInTheDocument();
+
+    // Find all targets
+    let targetDropdown;
+    let targetItems;
+
+    await user.pointer({
+      keys: "[MouseLeft]",
+      target: missionPicture,
+      coords: { x: 200, y: 130 },
+    });
+    targetDropdown = await screen.findByRole("list", {
+      name: /^Target dropdown$/i,
+    });
+    targetItems = within(targetDropdown).getAllByRole("button");
+
+    await user.click(targetItems[0]);
+    expect(await screen.findByText(/You found/i)).toBeInTheDocument();
+    expect(
+      screen.queryByRole("list", { name: /^Target dropdown$/i }),
+    ).not.toBeInTheDocument();
+
+    // Main test
+    expect(screen.getByTestId("overlay")).toBeInTheDocument();
+    const completedForm = screen.getByRole("form");
+    expect(completedForm).toBeInTheDocument();
+
+    expect(
+      within(completedForm).getByText(
+        /^You found all the targets in \d+(\.\d+)? seconds! You ranked \d+$/i,
+      ),
+    );
+    expect(
+      within(completedForm).getByRole("button", {
+        name: /^Submit & Return to the Homepage$/i,
+      }),
+    ).toBeInTheDocument();
   });
 
   it("Renders error correctly", () => {});
