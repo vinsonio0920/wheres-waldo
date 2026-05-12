@@ -7,7 +7,10 @@ const TargetDropdown = ({
   setTargets,
   dropdownCoordinates,
   clickCoordinates,
+  setClickResult,
 }) => {
+  if (targets.every((target) => target.sniped)) return;
+
   const handleTargetClick = (event) => {
     const clickedTarget = targets.find(
       (target) => target.key === event.currentTarget.dataset.key,
@@ -37,12 +40,13 @@ const TargetDropdown = ({
           }
         });
         setTargets(newTargets);
+        setClickResult(clickedTarget.targetName);
       }
     });
 
     // error handling
     if (targetFound) return;
-    console.log("error");
+    setClickResult("error");
   };
 
   return (
@@ -78,6 +82,7 @@ const Mission = () => {
   // the coordinate that was clicked on the image
   const [clickCoordinates, setClickCoordinates] = useState([0, 0]);
   const [targets, setTargets] = useState(result.data.targets);
+  const [clickResult, setClickResult] = useState("");
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -107,6 +112,8 @@ const Mission = () => {
   }, []);
 
   const data = result.data;
+  const clickResultClass =
+    clickResult && (clickResult === "error" ? styles.failure : styles.success);
 
   // placeholder before adding the backend
   const handleButtonClick = () => {
@@ -133,6 +140,7 @@ const Mission = () => {
             setTargets={setTargets}
             dropdownCoordinates={dropdownCoordinates}
             clickCoordinates={clickCoordinates}
+            setClickResult={setClickResult}
           />
         )}
         <img
@@ -143,8 +151,13 @@ const Mission = () => {
       </div>
       <p
         data-testid="click-result"
-        className={`${styles.resultPara} ${styles.failure}`}
-      ></p>
+        className={`${styles.resultPara} ${clickResultClass}`}
+      >
+        {clickResult &&
+          (clickResult === "error"
+            ? "There is nothing here"
+            : `You found ${clickResult}`)}
+      </p>
       <p>
         NOTE: Pagination is currently mocked. After the backend is implemented
         we will make it work!

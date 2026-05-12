@@ -153,11 +153,16 @@ describe("Mission component", () => {
 
     render(<RouterProvider router={router} />);
 
+    // Check that the relevant elements exists
     const missionPicture = await screen.findByRole("img", {
       name: /^Mission picture$/i,
     });
     expect(missionPicture).toBeInTheDocument();
     expect(screen.getByTestId("click-result")).toBeEmptyDOMElement();
+
+    // Main test
+    let targetDropdown;
+    let targetItems;
 
     // random click that doesn't have the target
     await user.pointer({
@@ -165,18 +170,40 @@ describe("Mission component", () => {
       target: missionPicture,
       coords: { x: 30, y: 60 },
     });
-    expect(screen.getByTestId("click-result").textContent).toMatch(
-      /There is nothing here/i,
-    );
+    targetDropdown = await screen.findByRole("list", {
+      name: /^Target dropdown$/i,
+    });
+    targetItems = within(targetDropdown).getAllByRole("button");
+
+    await user.click(targetItems[0]);
+    expect(
+      await screen.findByText(/There is nothing here/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("list", { name: /^Target dropdown$/i }),
+    ).not.toBeInTheDocument();
 
     await user.pointer({
       keys: "[MouseLeft]",
       target: missionPicture,
       coords: { x: 200, y: 130 },
     });
-    expect(screen.getByTestId("click-result").textContent).toMatch(
-      /You found panda/i,
-    );
+    targetDropdown = await screen.findByRole("list", {
+      name: /^Target dropdown$/i,
+    });
+    targetItems = within(targetDropdown).getAllByRole("button");
+
+    await user.click(targetItems[0]);
+    expect(await screen.findByText(/You found/i)).toBeInTheDocument();
+    expect(
+      screen.queryByRole("list", { name: /^Target dropdown$/i }),
+    ).not.toBeInTheDocument();
+
+    // No more dropdown, as all targets have been found
+    await user.click(missionPicture);
+    expect(
+      screen.queryByRole("list", { name: /^Target dropdown$/i }),
+    ).not.toBeInTheDocument();
   });
 
   it("Renders form modal correctly", () => {
