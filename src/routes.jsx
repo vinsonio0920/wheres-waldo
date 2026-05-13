@@ -1,4 +1,5 @@
 import App from "./App";
+import { ErrorPage } from "./errorPage/ErrorPage";
 import { Mission } from "./mission/Mission";
 import { Missions } from "./missions/Missions";
 
@@ -124,7 +125,7 @@ const routes = [
         }),
       },
     ],
-    // errorElement: <ErrorElement />,
+    errorElement: <ErrorPage />,
   },
 ];
 
