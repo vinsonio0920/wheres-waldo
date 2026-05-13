@@ -1,4 +1,5 @@
 import App from "./App";
+import { Attributions } from "./attributions/Attributions";
 import { ErrorPage } from "./errorPage/ErrorPage";
 import { Mission } from "./mission/Mission";
 import { Missions } from "./missions/Missions";
@@ -126,6 +127,10 @@ const routes = [
       },
     ],
     errorElement: <ErrorPage />,
+  },
+  {
+    path: "/attributions",
+    element: <Attributions />,
   },
 ];
 
