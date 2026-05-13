@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useLoaderData, useNavigate } from "react-router-dom";
+import { Form, useLoaderData, useNavigate } from "react-router-dom";
 import styles from "./Mission.module.css";
 
 const ConfirmationModal = () => {
@@ -13,12 +13,16 @@ const ConfirmationModal = () => {
   return (
     <>
       <div data-testid="overlay" className="overlay"></div>
-      <div data-testid="completed-modal" className={styles.completedModal}>
+      <Form
+        data-testid="completed-modal"
+        method="POST"
+        className={styles.completedModal}
+      >
         <h2>🔥 You found all the targets in 123 seconds! You ranked 12</h2>
         <button type="button" onClick={handleSubmitClick}>
           Submit & Return to the Homepage
         </button>
-      </div>
+      </Form>
     </>
   );
 };

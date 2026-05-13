@@ -251,6 +251,13 @@ describe("Mission component", () => {
         /^🔥 You found all the targets in \d+(\.\d+)? seconds! You ranked \d+$/i,
       ),
     );
+    expect(within(completedModal).getByLabelText("Name")).toBeInTheDocument();
+    expect(
+      within(completedModal).getByRole("textarea", { name: "name" }),
+    ).toBeInTheDocument();
+    expect(
+      within(completedModal).getByPlaceholderText(/^Name (required)$/i),
+    ).toBeInTheDocument();
     expect(
       within(completedModal).getByRole("button", {
         name: /^Submit & Return to the Homepage$/i,
