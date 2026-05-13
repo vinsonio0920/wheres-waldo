@@ -253,10 +253,10 @@ describe("Mission component", () => {
     );
     expect(within(completedModal).getByLabelText("Name")).toBeInTheDocument();
     expect(
-      within(completedModal).getByRole("textarea", { name: "name" }),
+      within(completedModal).getByRole("textbox", { name: /name/i }),
     ).toBeInTheDocument();
     expect(
-      within(completedModal).getByPlaceholderText(/^Name (required)$/i),
+      within(completedModal).getByPlaceholderText("Name (required)"),
     ).toBeInTheDocument();
     expect(
       within(completedModal).getByRole("button", {

@@ -19,9 +19,22 @@ const ConfirmationModal = () => {
         className={styles.completedModal}
       >
         <h2>🔥 You found all the targets in 123 seconds! You ranked 12</h2>
-        <button type="button" onClick={handleSubmitClick}>
-          Submit & Return to the Homepage
-        </button>
+        <div>
+          <label htmlFor="name">Name</label>
+          <input
+            type="text"
+            id="name"
+            name="name"
+            required
+            maxLength="26"
+            placeholder="Name (required)"
+          />
+        </div>
+        <div>
+          <button type="submit" onClick={handleSubmitClick}>
+            Submit & Return to the Homepage
+          </button>
+        </div>
       </Form>
     </>
   );
