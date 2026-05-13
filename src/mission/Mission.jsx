@@ -20,7 +20,9 @@ const ConfirmationModal = () => {
       >
         <h2>🔥 You found all the targets in 123 seconds! You ranked 12</h2>
         <div>
-          <label htmlFor="name">Name</label>
+          <label htmlFor="name" className="srOnly">
+            Name
+          </label>
           <input
             type="text"
             id="name"
@@ -28,6 +30,7 @@ const ConfirmationModal = () => {
             required
             maxLength="26"
             placeholder="Name (required)"
+            className={styles.nameInput}
           />
         </div>
         <div>

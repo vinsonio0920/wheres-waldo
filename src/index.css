@@ -198,3 +198,13 @@ button:hover {
   background-color: rgba(0, 0, 0, 0.5);
   z-index: 96;
 }
+
+/* Hide element out of page, but make it accessible to screen reader as well */
+.srOnly {
+  position: absolute;
+  left: -10000px;
+  top: auto;
+  width: 1px;
+  height: 1px;
+  overflow: hidden;
+}
