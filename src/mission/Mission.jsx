@@ -1,14 +1,23 @@
 import { useEffect, useState } from "react";
-import { useLoaderData } from "react-router-dom";
+import { useLoaderData, useNavigate } from "react-router-dom";
 import styles from "./Mission.module.css";
 
 const ConfirmationModal = () => {
+  const navigate = useNavigate();
+
+  const handleSubmitClick = () => {
+    // upload time to leaderboard
+    navigate("/");
+  };
+
   return (
     <>
       <div data-testid="overlay" className="overlay"></div>
       <div data-testid="completed-modal" className={styles.completedModal}>
         <h2>🔥 You found all the targets in 123 seconds! You ranked 12</h2>
-        <button type="button">Submit & Return to the Homepage</button>
+        <button type="button" onClick={handleSubmitClick}>
+          Submit & Return to the Homepage
+        </button>
       </div>
     </>
   );
