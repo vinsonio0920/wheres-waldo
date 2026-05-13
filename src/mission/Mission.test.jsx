@@ -248,7 +248,7 @@ describe("Mission component", () => {
 
     expect(
       within(completedModal).getByText(
-        /^You found all the targets in \d+(\.\d+)? seconds! You ranked \d+$/i,
+        /^🔥 You found all the targets in \d+(\.\d+)? seconds! You ranked \d+$/i,
       ),
     );
     expect(

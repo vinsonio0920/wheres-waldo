@@ -6,8 +6,8 @@ const ConfirmationModal = () => {
   return (
     <>
       <div data-testid="overlay" className="overlay"></div>
-      <div data-testid="completed-modal">
-        <h1>You found all the targets in 123 seconds! You ranked 12</h1>
+      <div data-testid="completed-modal" className={styles.completedModal}>
+        <h2>🔥 You found all the targets in 123 seconds! You ranked 12</h2>
         <button type="button">Submit & Return to the Homepage</button>
       </div>
     </>
