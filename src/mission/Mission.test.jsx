@@ -194,7 +194,7 @@ describe("Mission component", () => {
     targetItems = within(targetDropdown).getAllByRole("button");
 
     await user.click(targetItems[0]);
-    expect(await screen.findByText(/You found/i)).toBeInTheDocument();
+    expect(await screen.findByText(/^You found panda$/i)).toBeInTheDocument();
     expect(
       screen.queryByRole("list", { name: /^Target dropdown$/i }),
     ).not.toBeInTheDocument();
@@ -236,26 +236,27 @@ describe("Mission component", () => {
     targetItems = within(targetDropdown).getAllByRole("button");
 
     await user.click(targetItems[0]);
-    expect(await screen.findByText(/You found/i)).toBeInTheDocument();
+    expect(await screen.findByText(/^You found panda$/i)).toBeInTheDocument();
     expect(
       screen.queryByRole("list", { name: /^Target dropdown$/i }),
     ).not.toBeInTheDocument();
 
     // Main test
     expect(screen.getByTestId("overlay")).toBeInTheDocument();
-    const completedForm = screen.getByRole("form");
-    expect(completedForm).toBeInTheDocument();
+    const completedModal = screen.getByTestId("completed-modal");
+    expect(completedModal).toBeInTheDocument();
 
     expect(
-      within(completedForm).getByText(
+      within(completedModal).getByText(
         /^You found all the targets in \d+(\.\d+)? seconds! You ranked \d+$/i,
       ),
     );
     expect(
-      within(completedForm).getByRole("button", {
+      within(completedModal).getByRole("button", {
         name: /^Submit & Return to the Homepage$/i,
       }),
     ).toBeInTheDocument();
+    // button click will be tested as an integration test!
   });
 
   it("Renders error correctly", () => {});

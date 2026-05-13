@@ -2,12 +2,25 @@ import { useEffect, useState } from "react";
 import { useLoaderData } from "react-router-dom";
 import styles from "./Mission.module.css";
 
+const ConfirmationModal = () => {
+  return (
+    <>
+      <div data-testid="overlay" className="overlay"></div>
+      <div data-testid="completed-modal">
+        <h1>You found all the targets in 123 seconds! You ranked 12</h1>
+        <button type="button">Submit & Return to the Homepage</button>
+      </div>
+    </>
+  );
+};
+
 const TargetDropdown = ({
   targets,
   setTargets,
   dropdownCoordinates,
   clickCoordinates,
   setClickResult,
+  setShowCompletionModal,
 }) => {
   if (targets.every((target) => target.sniped)) return;
 
@@ -41,6 +54,9 @@ const TargetDropdown = ({
         });
         setTargets(newTargets);
         setClickResult(clickedTarget.targetName);
+
+        if (newTargets.every((target) => target.sniped))
+          setShowCompletionModal(true);
       }
     });
 
@@ -83,6 +99,7 @@ const Mission = () => {
   const [clickCoordinates, setClickCoordinates] = useState([0, 0]);
   const [targets, setTargets] = useState(result.data.targets);
   const [clickResult, setClickResult] = useState("");
+  const [showCompletionModal, setShowCompletionModal] = useState(false);
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -132,6 +149,7 @@ const Mission = () => {
 
   return (
     <>
+      {showCompletionModal && <ConfirmationModal />}
       <h1 className={styles.missionHeading}>Mission: {data.mission}</h1>
       <div className={styles.imageContainer}>
         {showTargetDropdown && (
@@ -141,6 +159,7 @@ const Mission = () => {
             dropdownCoordinates={dropdownCoordinates}
             clickCoordinates={clickCoordinates}
             setClickResult={setClickResult}
+            setShowCompletionModal={setShowCompletionModal}
           />
         )}
         <img
