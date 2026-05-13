@@ -19,7 +19,7 @@ describe("Error 404 component", () => {
   it("Renders error page correctly", () => {
     render(<RouterProvider router={router} />);
 
-    const logoLink = screen.getByRole("link", { name: /^Logo$/i });
+    const logoLink = screen.getByRole("link", { name: /Logo/i });
     expect(
       within(logoLink).getByRole("img", { name: /^Logo$/i }),
     ).toBeInTheDocument();
@@ -29,7 +29,7 @@ describe("Error 404 component", () => {
       screen.getByRole("heading", { name: /^Wrong Target!$/i }),
     ).toBeInTheDocument();
     expect(
-      screen.getByText(/^The page your are looking for doesn't exist!$/i),
+      screen.getByText(/^The page you are looking for doesn't exist!$/i),
     ).toBeInTheDocument();
     expect(
       screen.getByRole("link", { name: /^Head back to the homepage.$/i }),
