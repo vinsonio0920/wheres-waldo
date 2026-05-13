@@ -1,0 +1,39 @@
+.errorContainer {
+  position: absolute;
+  top: 45%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  text-align: center;
+  line-height: 1.5;
+  width: 100%;
+  padding: 0.5rem;
+}
+
+.logoLink {
+  font-family: "norwester", Arial, Helvetica, sans-serif;
+  font-size: 2rem;
+  font-weight: 600;
+  color: #000;
+  text-decoration: none;
+}
+
+.logoLink img {
+  margin-right: 0.5rem;
+}
+
+.logoLink span {
+  position: relative;
+  bottom: 0.2rem;
+}
+
+h1 {
+  font-size: 2.5rem;
+  font-weight: 600;
+  margin-bottom: 0.5rem;
+}
+
+.homepageLink {
+  display: block;
+  color: rgb(9, 144, 9);
+  margin-top: 0.5rem;
+}
