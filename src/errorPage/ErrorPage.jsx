@@ -9,7 +9,7 @@ const ErrorPage = () => {
         <img src={logoSvg} width="32" alt="Logo" />
         <span>Sniper</span>
       </Link>
-      <h1>Wrong target!</h1>
+      <h1 className={styles.errorHeading}>Wrong target!</h1>
       <p>The page you are looking for doesn't exist!</p>
       <Link to="/" className={styles.homepageLink}>
         Head back to the homepage.

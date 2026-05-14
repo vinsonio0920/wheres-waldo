@@ -1,15 +1,24 @@
+import styles from "./Attributions.module.css";
+
 const Attributions = () => {
   return (
-    <>
-      <h1>Attributions</h1>
+    <div className={styles.attributionsContainer}>
+      <h1 className={styles.attributionsHeading}>Attributions</h1>
       <p data-testid="attributions-para">
         All of the photos in this website was taken from the internet. I am
         currently not skilled enough (yet!) to make all these amazing photos!
         Besides that, not much else to say. I hope you enjoyed the website. The
-        majority of this website's design was based on Where's Waldo? Play
-        Online which I highly recommend. I've spent a good chunk of time playing
-        all the levels in the website and had a lot of fun doing so. Now.. is
-        the word count there yet?
+        majority of this website's design was based on{" "}
+        <a
+          target="_blank"
+          href="https://whereiswaldo.com/"
+          rel="noopener noreferrer"
+        >
+          Where's Waldo? Play Online
+        </a>{" "}
+        which I highly recommend. I've spent a good chunk of time playing all
+        the levels in the website and had a lot of fun doing so. Now it's time
+        to give credit where credits' due?
       </p>
       <ul aria-label="Attributions list">
         <li>
@@ -43,7 +52,7 @@ const Attributions = () => {
           </a>
         </li>
       </ul>
-    </>
+    </div>
   );
 };
 

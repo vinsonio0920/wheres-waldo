@@ -125,12 +125,12 @@ const routes = [
           },
         }),
       },
+      {
+        path: "/attributions",
+        element: <Attributions />,
+      },
     ],
     errorElement: <ErrorPage />,
-  },
-  {
-    path: "/attributions",
-    element: <Attributions />,
   },
 ];
 

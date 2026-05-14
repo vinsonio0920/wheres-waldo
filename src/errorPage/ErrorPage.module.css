@@ -26,7 +26,7 @@
   bottom: 0.2rem;
 }
 
-h1 {
+.errorHeading {
   font-size: 2.5rem;
   font-weight: 600;
   margin-bottom: 0.5rem;
@@ -34,6 +34,6 @@ h1 {
 
 .homepageLink {
   display: block;
-  color: rgb(9, 144, 9);
+  color: var(--link-color);
   margin-top: 0.5rem;
 }

@@ -1,0 +1,30 @@
+.attributionsContainer {
+  line-height: 1.5;
+  font-size: 1.05rem;
+  max-width: 75ch;
+  padding: 0 clamp(0.5rem, 3vw, 1rem);
+  margin: auto;
+}
+
+.attributionsHeading {
+  text-align: center;
+  font-size: 2rem;
+  font-weight: 600;
+  margin: 2rem auto;
+}
+
+.attributionsContainer p {
+  margin-bottom: 1rem;
+}
+
+.attributionsContainer ul {
+  list-style: disc;
+}
+
+.attributionsContainer li {
+  margin: 0 auto 1rem 1rem;
+}
+
+.attributionsContainer a {
+  color: var(--link-color);
+}
