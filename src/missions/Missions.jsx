@@ -11,7 +11,7 @@ const Missions = () => {
       </div>
     );
   }
-  if (result.data.length <= 0) {
+  if (result.data.items.length <= 0) {
     return (
       <div className={styles.emptyContainer}>
         <div>
@@ -28,7 +28,7 @@ const Missions = () => {
       aria-label="Missions"
       className={styles.missionUl}
     >
-      {result.data.map((mission) => (
+      {result.data.items.map((mission) => (
         <li key={mission.id} className={styles.missionLi}>
           <Link to={`/missions/${mission.id}`}></Link>
           <img src={mission.image} alt="Mission picture" width={300} />

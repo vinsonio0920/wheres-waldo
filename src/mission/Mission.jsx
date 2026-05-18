@@ -55,7 +55,7 @@ const TargetDropdown = ({
 
   const handleTargetClick = (event) => {
     const clickedTarget = targets.find(
-      (target) => target.key === event.currentTarget.dataset.key,
+      (target) => Number(target.id) === Number(event.currentTarget.dataset.id),
     );
 
     let targetFound = false;
@@ -72,7 +72,7 @@ const TargetDropdown = ({
         targetFound = true;
 
         const newTargets = targets.map((target) => {
-          if (target.key === event.currentTarget.dataset.key) {
+          if (Number(target.id) === Number(event.currentTarget.dataset.id)) {
             return {
               ...target,
               sniped: true,
@@ -82,7 +82,7 @@ const TargetDropdown = ({
           }
         });
         setTargets(newTargets);
-        setClickResult(clickedTarget.targetName);
+        setClickResult(clickedTarget.name);
 
         if (newTargets.every((target) => target.sniped))
           setShowCompletionModal(true);
@@ -104,13 +104,9 @@ const TargetDropdown = ({
       aria-label="Target dropdown"
     >
       {targets.map((target) => (
-        <li key={target.key}>
-          <button
-            type="button"
-            onClick={handleTargetClick}
-            data-key={target.key}
-          >
-            {target.targetName}
+        <li key={target.id}>
+          <button type="button" onClick={handleTargetClick} data-id={target.id}>
+            {target.name}
           </button>
         </li>
       ))}
@@ -120,13 +116,20 @@ const TargetDropdown = ({
 
 const Mission = () => {
   const result = useLoaderData();
-  const [leaderboard, setLeaderboard] = useState(result.data.leaderboard);
+  const [leaderboard, setLeaderboard] = useState(
+    result.data.items[0].leaderboard,
+  );
   const [showTargetDropdown, setShowTargetDropdown] = useState(false);
   // the position that the dropdown should be shown (relative to the imageContainer)
   const [dropdownCoordinates, setDropdownCoordinates] = useState([0, 0]);
   // the coordinate that was clicked on the image
   const [clickCoordinates, setClickCoordinates] = useState([0, 0]);
-  const [targets, setTargets] = useState(result.data.targets);
+  const [targets, setTargets] = useState(
+    result.data.items[0].targets.map((target) => ({
+      ...target,
+      sniped: false,
+    })),
+  );
   const [clickResult, setClickResult] = useState("");
   const [showCompletionModal, setShowCompletionModal] = useState(false);
 
@@ -157,7 +160,7 @@ const Mission = () => {
     };
   }, []);
 
-  const data = result.data;
+  const data = result.data.items[0];
   const clickResultClass =
     clickResult && (clickResult === "error" ? styles.failure : styles.success);
 
@@ -234,7 +237,7 @@ const Mission = () => {
           </thead>
           <tbody>
             {leaderboard.map((entry, index) => (
-              <tr key={entry.time}>
+              <tr key={entry.id}>
                 <td className={styles.rankTd}>{index + 1}</td>
                 <td className={styles.playerTd}>{entry.name}</td>
                 <td className={styles.timeTd}>{entry.time}s</td>
