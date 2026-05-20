@@ -126,7 +126,7 @@ const Mission = () => {
   // the coordinate that was clicked on the image
   const [clickCoordinates, setClickCoordinates] = useState([0, 0]);
   const [targets, setTargets] = useState(
-    result.missionJson?.data.items[0]?.targets.map((target) => ({
+    result.missionJson?.data?.items[0]?.targets.map((target) => ({
       ...target,
       sniped: false,
     })),
@@ -172,7 +172,10 @@ const Mission = () => {
     );
   }
 
-  const cursor = leaderboard && leaderboard[leaderboard.length - 1].id;
+  const cursor =
+    leaderboard &&
+    leaderboard.length > 0 &&
+    leaderboard[leaderboard.length - 1].id;
   const data = result.missionJson.data.items[0];
   const clickResultClass =
     clickResult && (clickResult === "error" ? styles.failure : styles.success);
@@ -235,11 +238,11 @@ const Mission = () => {
             {result.leaderboardJson?.error?.message}
           </p>
         )}
-        {result.leaderboardJson?.data && (
-          <table
-            aria-label="Leaderboard table"
-            className={styles.leaderboardTable}
-          >
+        <table
+          aria-label="Leaderboard table"
+          className={styles.leaderboardTable}
+        >
+          {!result.leaderboardJson?.error && (
             <thead>
               <tr>
                 <th scope="col" className={styles.rankTh}>
@@ -256,6 +259,8 @@ const Mission = () => {
                 </th>
               </tr>
             </thead>
+          )}
+          {result.leaderboardJson?.data && leaderboard.length > 0 && (
             <tbody>
               {leaderboard.map((entry, index) => (
                 <tr key={entry.id}>
@@ -266,7 +271,12 @@ const Mission = () => {
                 </tr>
               ))}
             </tbody>
-          </table>
+          )}
+        </table>
+        {leaderboard?.length <= 0 && (
+          <p className={styles.emptyPara}>
+            There's nobody on the leaderboard right now. Will you be the first?
+          </p>
         )}
         {leaderboard?.length < result.leaderboardJson?.data?.totalItems && (
           <button
