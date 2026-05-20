@@ -117,22 +117,22 @@ const TargetDropdown = ({
 const Mission = () => {
   const result = useLoaderData();
   const [leaderboard, setLeaderboard] = useState(
-    result.leaderboardJson.data.items,
+    result.leaderboardJson?.data?.items,
   );
+  const [leaderboardFetchError, setLeaderboardFetchError] = useState(false);
   const [showTargetDropdown, setShowTargetDropdown] = useState(false);
   // the position that the dropdown should be shown (relative to the imageContainer)
   const [dropdownCoordinates, setDropdownCoordinates] = useState([0, 0]);
   // the coordinate that was clicked on the image
   const [clickCoordinates, setClickCoordinates] = useState([0, 0]);
   const [targets, setTargets] = useState(
-    result.missionJson.data.items[0].targets.map((target) => ({
+    result.missionJson?.data.items[0]?.targets.map((target) => ({
       ...target,
       sniped: false,
     })),
   );
   const [clickResult, setClickResult] = useState("");
   const [showCompletionModal, setShowCompletionModal] = useState(false);
-  const cursor = leaderboard[leaderboard.length - 1].id;
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -161,6 +161,18 @@ const Mission = () => {
     };
   }, []);
 
+  if (result.missionJson?.error) {
+    return (
+      <div className={styles.errorContainer}>
+        <p>
+          {result.missionJson?.error?.message ||
+            result.leaderboardJson?.error?.message}
+        </p>
+      </div>
+    );
+  }
+
+  const cursor = leaderboard && leaderboard[leaderboard.length - 1].id;
   const data = result.missionJson.data.items[0];
   const clickResultClass =
     clickResult && (clickResult === "error" ? styles.failure : styles.success);
@@ -179,9 +191,10 @@ const Mission = () => {
       const newLeaderboard = leaderboard.concat(result.data.items);
 
       setLeaderboard(newLeaderboard);
+      setLeaderboardFetchError(false);
     } catch (error) {
       console.error(error.message);
-      // show error message for load more
+      setLeaderboardFetchError(true);
     }
   };
 
@@ -217,38 +230,45 @@ const Mission = () => {
       </p>
       <div className={styles.leaderboardContainer}>
         <h2 className={styles.leaderboardHeading}>Leaderboard</h2>
-        <table
-          aria-label="Leaderboard table"
-          className={styles.leaderboardTable}
-        >
-          <thead>
-            <tr>
-              <th scope="col" className={styles.rankTh}>
-                Rank
-              </th>
-              <th scope="col" className={styles.playerTh}>
-                Player
-              </th>
-              <th scope="col" className={styles.timeTh}>
-                Time
-              </th>
-              <th scope="col" className={styles.dateTh}>
-                Date
-              </th>
-            </tr>
-          </thead>
-          <tbody>
-            {leaderboard.map((entry, index) => (
-              <tr key={entry.id}>
-                <td className={styles.rankTd}>{index + 1}</td>
-                <td className={styles.playerTd}>{entry.name}</td>
-                <td className={styles.timeTd}>{entry.time}s</td>
-                <td className={styles.dateTd}>{entry.date}</td>
+        {result.leaderboardJson?.error && (
+          <p className={styles.loadError}>
+            {result.leaderboardJson?.error?.message}
+          </p>
+        )}
+        {result.leaderboardJson?.data && (
+          <table
+            aria-label="Leaderboard table"
+            className={styles.leaderboardTable}
+          >
+            <thead>
+              <tr>
+                <th scope="col" className={styles.rankTh}>
+                  Rank
+                </th>
+                <th scope="col" className={styles.playerTh}>
+                  Player
+                </th>
+                <th scope="col" className={styles.timeTh}>
+                  Time
+                </th>
+                <th scope="col" className={styles.dateTh}>
+                  Date
+                </th>
               </tr>
-            ))}
-          </tbody>
-        </table>
-        {leaderboard.length < result.leaderboardJson.data.totalItems && (
+            </thead>
+            <tbody>
+              {leaderboard.map((entry, index) => (
+                <tr key={entry.id}>
+                  <td className={styles.rankTd}>{index + 1}</td>
+                  <td className={styles.playerTd}>{entry.name}</td>
+                  <td className={styles.timeTd}>{entry.time}s</td>
+                  <td className={styles.dateTd}>{entry.date}</td>
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        )}
+        {leaderboard?.length < result.leaderboardJson?.data?.totalItems && (
           <button
             type="button"
             onClick={handleButtonClick}
@@ -256,6 +276,11 @@ const Mission = () => {
           >
             Show more
           </button>
+        )}
+        {leaderboardFetchError && (
+          <p className={styles.fetchError}>
+            There was an error loading the entries. Please try again later.
+          </p>
         )}
       </div>
     </>
