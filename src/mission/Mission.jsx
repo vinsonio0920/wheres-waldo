@@ -117,7 +117,7 @@ const TargetDropdown = ({
 const Mission = () => {
   const result = useLoaderData();
   const [leaderboard, setLeaderboard] = useState(
-    result.data.items[0].leaderboard,
+    result.leaderboardJson.data.items,
   );
   const [showTargetDropdown, setShowTargetDropdown] = useState(false);
   // the position that the dropdown should be shown (relative to the imageContainer)
@@ -125,13 +125,14 @@ const Mission = () => {
   // the coordinate that was clicked on the image
   const [clickCoordinates, setClickCoordinates] = useState([0, 0]);
   const [targets, setTargets] = useState(
-    result.data.items[0].targets.map((target) => ({
+    result.missionJson.data.items[0].targets.map((target) => ({
       ...target,
       sniped: false,
     })),
   );
   const [clickResult, setClickResult] = useState("");
   const [showCompletionModal, setShowCompletionModal] = useState(false);
+  const cursor = leaderboard[leaderboard.length - 1].id;
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -160,23 +161,28 @@ const Mission = () => {
     };
   }, []);
 
-  const data = result.data.items[0];
+  const data = result.missionJson.data.items[0];
   const clickResultClass =
     clickResult && (clickResult === "error" ? styles.failure : styles.success);
 
-  // placeholder before adding the backend
-  const handleButtonClick = () => {
-    if (leaderboard.length >= 20) return;
+  const handleButtonClick = async () => {
+    // on error, show error message!
 
-    const newLeaderboard = [...leaderboard];
-    let time = 11;
+    if (leaderboard.length >= result.leaderboardJson.data.totalItems) return;
 
-    for (let i = 0; i < 10; i++) {
-      newLeaderboard.push({ name: "broski", time: time, date: "Best" });
-      time += 1;
+    const url = `${import.meta.env.VITE_SERVER_URL}/missions/${result.missionJson.data.items[0].id}/leaderboard?cursor=${cursor}`;
+    try {
+      const response = await fetch(url);
+      if (!response.ok) throw new Error(`Response status: ${response.status}`);
+
+      const result = await response.json();
+      const newLeaderboard = leaderboard.concat(result.data.items);
+
+      setLeaderboard(newLeaderboard);
+    } catch (error) {
+      console.error(error.message);
+      // show error message for load more
     }
-
-    setLeaderboard(newLeaderboard);
   };
 
   return (
@@ -208,10 +214,6 @@ const Mission = () => {
           (clickResult === "error"
             ? "There is nothing here"
             : `You found ${clickResult}`)}
-      </p>
-      <p>
-        NOTE: Pagination is currently mocked. After the backend is implemented
-        we will make it work!
       </p>
       <div className={styles.leaderboardContainer}>
         <h2 className={styles.leaderboardHeading}>Leaderboard</h2>
@@ -246,7 +248,7 @@ const Mission = () => {
             ))}
           </tbody>
         </table>
-        {leaderboard.length < 20 && (
+        {leaderboard.length < result.leaderboardJson.data.totalItems && (
           <button
             type="button"
             onClick={handleButtonClick}
