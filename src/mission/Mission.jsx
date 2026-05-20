@@ -54,6 +54,8 @@ const TargetDropdown = ({
   if (targets.every((target) => target.sniped)) return;
 
   const handleTargetClick = (event) => {
+    // move this to fetch! POST
+
     const clickedTarget = targets.find(
       (target) => Number(target.id) === Number(event.currentTarget.dataset.id),
     );

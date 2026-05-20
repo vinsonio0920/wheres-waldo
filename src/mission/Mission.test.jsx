@@ -1,4 +1,4 @@
-import { describe, expect, it } from "vitest";
+import { describe, expect, it, vi } from "vitest";
 import { Mission } from "./Mission";
 import { createMemoryRouter, RouterProvider } from "react-router-dom";
 import { render, screen, within } from "@testing-library/react";
@@ -10,52 +10,126 @@ describe("Mission component", () => {
       path: "/missions/:missionId",
       element: <Mission />,
       loader: () => ({
-        data: {
-          id: 1,
-          image:
-            "https://wl-brightside.cf.tsp.li/resize/728x/webp/bc7/1e0/ee75f05dbeb672d491c06f8c2f.jpg.webp",
-          mission: "Find the panda among the raccoons",
-          targets: [
-            {
-              key: "82a91656-fb51-4c56-bc6b-9393ac968fef",
-              targetName: "Panda",
-              // array of boxes, these are the possible click areas!
-              locations: [
-                // ears (left, right)
-                [
-                  [166, 203],
-                  [118, 152],
+        missionJson: {
+          data: {
+            updated: "2026-05-20T19:33:38.129Z",
+            totalItems: 1,
+            startIndex: 1,
+            itemsPerPage: 1,
+            items: [
+              {
+                id: 6,
+                image:
+                  "https://wl-brightside.cf.tsp.li/resize/728x/webp/bc7/1e0/ee75f05dbeb672d491c06f8c2f.jpg.webp",
+                mission: "Find the panda among the raccoons",
+                type: "single",
+                targets: [
+                  {
+                    id: 2,
+                    name: "Panda",
+                    locations: [
+                      [
+                        [166, 203],
+                        [118, 152],
+                      ],
+                      [
+                        [251, 286],
+                        [116, 152],
+                      ],
+                      [
+                        [185, 271],
+                        [127, 156],
+                      ],
+                      [
+                        [176, 244],
+                        [155, 233],
+                      ],
+                    ],
+                    missionId: 6,
+                  },
                 ],
-                [
-                  [251, 286],
-                  [116, 152],
-                ],
-                // face
-                [
-                  [185, 271],
-                  [127, 156],
-                ],
-                [
-                  [176, 244],
-                  [155, 233],
-                ],
-              ],
-              sniped: false,
-            },
-          ],
-          type: "single",
-          leaderboard: [
-            { name: "AnononyMouseLol123344", time: "1", date: "Test" },
-            { name: "Anon", time: "2", date: "Test" },
-            { name: "Anon", time: "3", date: "Test" },
-            { name: "Anon", time: "4", date: "Test" },
-            { name: "Anon", time: "5", date: "Test" },
-            { name: "Anon", time: "6", date: "Test" },
-            { name: "Anon", time: "7", date: "Test" },
-            { name: "Anon", time: "8", date: "Test" },
-            { name: "Anon", time: "9", date: "Test" },
-            { name: "Anon", time: "10", date: "Test" },
-          ],
+              },
+            ],
+          },
+        },
+        leaderboardJson: {
+          data: {
+            totalItems: 13,
+            startIndex: 1,
+            itemsPerPage: 10,
+            items: [
+              {
+                id: 4,
+                name: "Vinsonius",
+                time: 1,
+                date: "2026-05-15T18:25:24.750Z",
+                missionId: 6,
+              },
+              {
+                id: 5,
+                name: "Waldinho",
+                time: 1,
+                date: "2026-05-15T18:25:24.750Z",
+                missionId: 6,
+              },
+              {
+                id: 6,
+                name: "Pirate King",
+                time: 1,
+                date: "2026-05-15T18:25:24.750Z",
+                missionId: 6,
+              },
+              {
+                id: 7,
+                name: "Vinson 2.0",
+                time: 1.11,
+                date: "2026-05-19T21:28:36.234Z",
+                missionId: 6,
+              },
+              {
+                id: 8,
+                name: "Vinson 2.0",
+                time: 1.11,
+                date: "2026-05-19T22:47:50.403Z",
+                missionId: 6,
+              },
+              {
+                id: 9,
+                name: "Vinson 2.0",
+                time: 1.11,
+                date: "2026-05-20T00:21:05.101Z",
+                missionId: 6,
+              },
+              {
+                id: 10,
+                name: "Vinson 2.0",
+                time: 1.11,
+                date: "2026-05-20T00:21:05.699Z",
+                missionId: 6,
+              },
+              {
+                id: 11,
+                name: "Vinson 2.0",
+                time: 1.11,
+                date: "2026-05-20T00:21:06.277Z",
+                missionId: 6,
+              },
+              {
+                id: 12,
+                name: "Vinson 2.0",
+                time: 1.11,
+                date: "2026-05-20T00:21:06.833Z",
+                missionId: 6,
+              },
+              {
+                id: 13,
+                name: "Vinson 2.0",
+                time: 1.11,
+                date: "2026-05-20T00:21:07.415Z",
+                missionId: 6,
+              },
+            ],
+          },
         },
       }),
     },
@@ -97,6 +171,34 @@ describe("Mission component", () => {
   });
 
   it("Paginates leaderboard correctly", async () => {
+    const fetchMock = vi.spyOn(window, "fetch").mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: vi.fn().mockResolvedValue({
+        data: {
+          items: [
+            {
+              id: "visjad",
+              name: "Vinsonius",
+              time: 1.12,
+              date: "2026-05-15T18:25:24.750Z",
+            },
+            {
+              id: "visjsadad",
+              name: "Vinsonus",
+              time: 2.12,
+              date: "2026-05-15T18:25:24.750Z",
+            },
+            {
+              id: "visjsasdwad",
+              name: "Vinsonio",
+              time: 1.33,
+              date: "2026-05-15T18:25:24.750Z",
+            },
+          ],
+        },
+      }),
+    });
     const user = UserEvent.setup();
 
     render(<RouterProvider router={router} />);
@@ -119,7 +221,12 @@ describe("Mission component", () => {
 
     await user.click(moreButton);
 
-    expect(within(leaderboardTable).getAllByRole("row")).toHaveLength(21);
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://localhost:3001/missions/6/leaderboard?cursor=13",
+    );
+    expect(await within(leaderboardTable).findAllByRole("row")).toHaveLength(
+      14,
+    );
     expect(
       screen.queryByRole("button", { name: /^Show More$/i }),
     ).not.toBeInTheDocument();
