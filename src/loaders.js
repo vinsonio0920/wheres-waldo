@@ -20,13 +20,19 @@ async function missionsLoader() {
 
 async function missionLoader({ params }) {
   const { missionId } = params;
-  const url = `${import.meta.env.VITE_SERVER_URL}/missions/${missionId}`;
+  const urls = [
+    `${import.meta.env.VITE_SERVER_URL}/missions/${missionId}`,
+    `${import.meta.env.VITE_SERVER_URL}/missions/${missionId}/leaderboard`,
+  ];
 
   try {
-    const response = await fetch(url);
+    const requests = urls.map((url) => fetch(url));
+    const responses = await Promise.all(requests);
 
-    const result = await response.json();
-    return result;
+    const jsons = responses.map((response) => response.json());
+    const [missionJson, leaderboardJson] = await Promise.all(jsons);
+
+    return { missionJson, leaderboardJson };
   } catch (error) {
     console.error(error);
     return {
