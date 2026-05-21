@@ -12,63 +12,110 @@ describe("Missions component", () => {
         path: "/",
         element: <Missions />,
         loader: () => ({
-          data: [
-            {
-              id: 1,
-              image:
-                "https://wl-brightside.cf.tsp.li/resize/728x/webp/bc7/1e0/ee75f05dbeb672d491c06f8c2f.jpg.webp",
-              mission: "Find the panda among the raccoons",
-              targets: [
-                {
-                  targetName: "Panda",
-                  location: null,
-                  sniped: false,
-                },
-              ],
-              type: "single",
-            },
-            {
-              id: 2,
-              image: "https://i.redd.it/ihi87vu0yk8f1.jpeg",
-              mission: "Find the 3 gymnasts",
-              targets: [
-                {
-                  targetName: "Gymnast",
-                  location: null,
-                  sniped: false,
-                },
-                {
-                  targetName: "Gymnast",
-                  location: null,
-                  sniped: false,
-                },
-                {
-                  targetName: "Gymnast",
-                  location: null,
-                  sniped: false,
-                },
-              ],
-              type: "multiple similar",
-            },
-            {
-              id: 3,
-              image: "https://i.redd.it/wdsa4yue626g1.jpeg",
-              mission: "Find both crocs (shoe and animal)",
-              targets: [
-                {
-                  targetName: "Croc (shoe)",
-                  location: null,
-                  sniped: false,
-                },
-                {
-                  targetName: "Croc (animal)",
-                  location: null,
-                  sniped: false,
-                },
-              ],
-              type: "multiple unique",
-            },
-          ],
+          data: {
+            updated: "2026-05-21T02:10:37.237Z",
+            totalItems: 2,
+            startIndex: 1,
+            itemsPerPage: 10,
+            items: [
+              {
+                id: 1,
+                image:
+                  "https://wl-brightside.cf.tsp.li/resize/728x/webp/bc7/1e0/ee75f05dbeb672d491c06f8c2f.jpg.webp",
+                mission: "Find the panda among the raccoons",
+                type: "single",
+                targets: [
+                  {
+                    id: 2,
+                    name: "Panda",
+                    locations: [
+                      [
+                        [166, 203],
+                        [118, 152],
+                      ],
+                      [
+                        [251, 286],
+                        [116, 152],
+                      ],
+                      [
+                        [185, 271],
+                        [127, 156],
+                      ],
+                      [
+                        [176, 244],
+                        [155, 233],
+                      ],
+                    ],
+                    missionId: 6,
+                  },
+                ],
+              },
+              {
+                id: 2,
+                image:
+                  "https://wl-brightside.cf.tsp.li/resize/728x/webp/bc7/1e0/ee75f05dbeb672d491c06f8c2f.jpg.webp",
+                mission: "Find the panda (2) among the raccoons",
+                type: "single",
+                targets: [
+                  {
+                    id: 2,
+                    name: "Panda",
+                    locations: [
+                      [
+                        [166, 203],
+                        [118, 152],
+                      ],
+                      [
+                        [251, 286],
+                        [116, 152],
+                      ],
+                      [
+                        [185, 271],
+                        [127, 156],
+                      ],
+                      [
+                        [176, 244],
+                        [155, 233],
+                      ],
+                    ],
+                    missionId: 6,
+                  },
+                ],
+              },
+              {
+                id: 3,
+                image:
+                  "https://wl-brightside.cf.tsp.li/resize/728x/webp/bc7/1e0/ee75f05dbeb672d491c06f8c2f.jpg.webp",
+                mission: "Find the panda (3) among the raccoons",
+                type: "single",
+                targets: [
+                  {
+                    id: 2,
+                    name: "Panda",
+                    locations: [
+                      [
+                        [166, 203],
+                        [118, 152],
+                      ],
+                      [
+                        [251, 286],
+                        [116, 152],
+                      ],
+                      [
+                        [185, 271],
+                        [127, 156],
+                      ],
+                      [
+                        [176, 244],
+                        [155, 233],
+                      ],
+                    ],
+                    missionId: 6,
+                  },
+                ],
+              },
+            ],
+          },
         }),
       },
     ];
@@ -104,7 +151,13 @@ describe("Missions component", () => {
         path: "/",
         element: <Missions />,
         loader: () => ({
-          data: [],
+          data: {
+            updated: "2026-05-21T02:10:37.237Z",
+            totalItems: 2,
+            startIndex: 1,
+            itemsPerPage: 10,
+            items: [],
+          },
         }),
       },
     ];
