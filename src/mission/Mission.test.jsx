@@ -373,5 +373,335 @@ describe("Mission component", () => {
     // button click will be tested as an integration test!
   });
 
-  it("Renders error correctly", () => {});
+  it("Renders mission error correctly", async () => {
+    const mockMissionErrorRoutes = [
+      {
+        path: "/missions/:missionId",
+        element: <Mission />,
+        loader: () => ({
+          missionJson: {
+            error: {
+              code: 500,
+              message:
+                "There was an error fetching the mission. Please try again later.",
+            },
+          },
+          leaderboardJson: {
+            data: {
+              totalItems: 13,
+              startIndex: 1,
+              itemsPerPage: 10,
+              items: [
+                {
+                  id: 4,
+                  name: "Vinsonius",
+                  time: 1,
+                  date: "2026-05-15T18:25:24.750Z",
+                  missionId: 6,
+                },
+                {
+                  id: 5,
+                  name: "Waldinho",
+                  time: 1,
+                  date: "2026-05-15T18:25:24.750Z",
+                  missionId: 6,
+                },
+                {
+                  id: 6,
+                  name: "Pirate King",
+                  time: 1,
+                  date: "2026-05-15T18:25:24.750Z",
+                  missionId: 6,
+                },
+                {
+                  id: 7,
+                  name: "Vinson 2.0",
+                  time: 1.11,
+                  date: "2026-05-19T21:28:36.234Z",
+                  missionId: 6,
+                },
+                {
+                  id: 8,
+                  name: "Vinson 2.0",
+                  time: 1.11,
+                  date: "2026-05-19T22:47:50.403Z",
+                  missionId: 6,
+                },
+                {
+                  id: 9,
+                  name: "Vinson 2.0",
+                  time: 1.11,
+                  date: "2026-05-20T00:21:05.101Z",
+                  missionId: 6,
+                },
+                {
+                  id: 10,
+                  name: "Vinson 2.0",
+                  time: 1.11,
+                  date: "2026-05-20T00:21:05.699Z",
+                  missionId: 6,
+                },
+                {
+                  id: 11,
+                  name: "Vinson 2.0",
+                  time: 1.11,
+                  date: "2026-05-20T00:21:06.277Z",
+                  missionId: 6,
+                },
+                {
+                  id: 12,
+                  name: "Vinson 2.0",
+                  time: 1.11,
+                  date: "2026-05-20T00:21:06.833Z",
+                  missionId: 6,
+                },
+                {
+                  id: 13,
+                  name: "Vinson 2.0",
+                  time: 1.11,
+                  date: "2026-05-20T00:21:07.415Z",
+                  missionId: 6,
+                },
+              ],
+            },
+          },
+        }),
+      },
+    ];
+
+    const missionErrorRouter = createMemoryRouter(mockMissionErrorRoutes, {
+      initialEntries: ["/missions/1"],
+    });
+
+    render(<RouterProvider router={missionErrorRouter} />);
+
+    expect(
+      await screen.findByText(
+        /^There was an error fetching the mission. Please try again later.$/i,
+      ),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("img", { name: /^Mission picture$/i }),
+    ).toBeNull();
+  });
+
+  it("Renders leaderboard error correctly", async () => {
+    const mockLeaderboardErrorRoute = [
+      {
+        path: "/missions/:missionId",
+        element: <Mission />,
+        loader: () => ({
+          missionJson: {
+            data: {
+              updated: "2026-05-20T19:33:38.129Z",
+              totalItems: 1,
+              startIndex: 1,
+              itemsPerPage: 1,
+              items: [
+                {
+                  id: 6,
+                  image:
+                    "https://wl-brightside.cf.tsp.li/resize/728x/webp/bc7/1e0/ee75f05dbeb672d491c06f8c2f.jpg.webp",
+                  mission: "Find the panda among the raccoons",
+                  type: "single",
+                  targets: [
+                    {
+                      id: 2,
+                      name: "Panda",
+                      locations: [
+                        [
+                          [166, 203],
+                          [118, 152],
+                        ],
+                        [
+                          [251, 286],
+                          [116, 152],
+                        ],
+                        [
+                          [185, 271],
+                          [127, 156],
+                        ],
+                        [
+                          [176, 244],
+                          [155, 233],
+                        ],
+                      ],
+                      missionId: 6,
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          leaderboardJson: {
+            error: {
+              code: 500,
+              message:
+                "There was an error fetching the leaderboard. Please try again later.",
+            },
+          },
+        }),
+      },
+    ];
+
+    const missionErrorRouter = createMemoryRouter(mockLeaderboardErrorRoute, {
+      initialEntries: ["/missions/1"],
+    });
+
+    render(<RouterProvider router={missionErrorRouter} />);
+
+    expect(
+      await screen.findByRole("img", { name: /^Mission picture$/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: /Find the panda among the raccoons/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /^Leaderboard$/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /^There was an error fetching the leaderboard. Please try again later.$/i,
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("Renders leaderboard load more error correctly", async () => {
+    const fetchMock = vi.spyOn(window, "fetch").mockResolvedValue({
+      ok: true,
+      status: 200,
+      json: vi.fn().mockResolvedValue({
+        error: {
+          code: 500,
+          message:
+            "There was an error fetching the leaderboard. Please try again later.",
+        },
+      }),
+    });
+    const user = UserEvent.setup();
+
+    render(<RouterProvider router={router} />);
+
+    // leaderboard
+    expect(
+      await screen.findByRole("heading", { name: /^Leaderboard$/i }),
+    ).toBeInTheDocument();
+
+    const leaderboardTable = screen.getByRole("table", {
+      name: /^Leaderboard table$/i,
+    });
+    const tableRows = within(leaderboardTable).getAllByRole("row");
+    const moreButton = screen.getByRole("button", { name: /^Show More$/i });
+
+    expect(leaderboardTable).toBeInTheDocument();
+    // all rows in tbody + thead row
+    expect(tableRows).toHaveLength(11);
+    expect(moreButton).toBeInTheDocument();
+
+    await user.click(moreButton);
+
+    expect(fetchMock).toHaveBeenCalledWith(
+      "http://localhost:3001/missions/6/leaderboard?cursor=13",
+    );
+    expect(await within(leaderboardTable).findAllByRole("row")).toHaveLength(
+      11,
+    );
+    expect(
+      screen.queryByRole("button", { name: /^Show More$/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /^There was an error loading the entries. Please try again later.$/i,
+      ),
+    ).toBeInTheDocument();
+  });
+
+  it("Renders empty leaderboard correctly", async () => {
+    const mockEmptyLeaderboardRouters = [
+      {
+        path: "/missions/:missionId",
+        element: <Mission />,
+        loader: () => ({
+          missionJson: {
+            data: {
+              updated: "2026-05-20T19:33:38.129Z",
+              totalItems: 1,
+              startIndex: 1,
+              itemsPerPage: 1,
+              items: [
+                {
+                  id: 6,
+                  image:
+                    "https://wl-brightside.cf.tsp.li/resize/728x/webp/bc7/1e0/ee75f05dbeb672d491c06f8c2f.jpg.webp",
+                  mission: "Find the panda among the raccoons",
+                  type: "single",
+                  targets: [
+                    {
+                      id: 2,
+                      name: "Panda",
+                      locations: [
+                        [
+                          [166, 203],
+                          [118, 152],
+                        ],
+                        [
+                          [251, 286],
+                          [116, 152],
+                        ],
+                        [
+                          [185, 271],
+                          [127, 156],
+                        ],
+                        [
+                          [176, 244],
+                          [155, 233],
+                        ],
+                      ],
+                      missionId: 6,
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          leaderboardJson: {
+            data: {
+              totalItems: 13,
+              startIndex: 1,
+              itemsPerPage: 10,
+              items: [],
+            },
+          },
+        }),
+      },
+    ];
+
+    const emptyLeaderboardRouter = createMemoryRouter(
+      mockEmptyLeaderboardRouters,
+      {
+        initialEntries: ["/missions/1"],
+      },
+    );
+
+    render(<RouterProvider router={emptyLeaderboardRouter} />);
+
+    expect(
+      await screen.findByRole("img", { name: /^Mission picture$/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", {
+        name: /Find the panda among the raccoons/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByRole("heading", { name: /^Leaderboard$/i }),
+    ).toBeInTheDocument();
+    expect(
+      screen.getByText(
+        /^There's nobody on the leaderboard right now\. Will you be the first\?$/i,
+      ),
+    ).toBeInTheDocument();
+  });
 });
