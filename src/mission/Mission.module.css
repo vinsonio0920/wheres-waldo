@@ -13,6 +13,10 @@
 
 /* Mission Page */
 
+.gameContainer {
+  min-height: calc(100vh - 4.25rem);
+}
+
 .missionHeading {
   text-align: center;
   font-size: 1.75rem;
@@ -254,7 +258,7 @@
 @media (min-width: 600px) {
   .leaderboardContainer {
     max-width: 56.25rem;
-    margin: 5rem auto 0 auto;
+    margin: 0 auto;
     padding: 1.25rem;
   }
 

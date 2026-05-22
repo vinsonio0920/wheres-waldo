@@ -223,31 +223,33 @@ const Mission = () => {
   return (
     <>
       {showCompletionModal && <ConfirmationModal />}
-      <h1 className={styles.missionHeading}>Mission: {data.mission}</h1>
-      <div className={styles.imageContainer}>
-        {showTargetDropdown && (
-          <TargetDropdown
-            missionId={missionId}
-            targets={targets}
-            setTargets={setTargets}
-            dropdownCoordinates={dropdownCoordinates}
-            clickCoordinates={clickCoordinates}
-            setClickResult={setClickResult}
-            setShowCompletionModal={setShowCompletionModal}
+      <div className={styles.gameContainer}>
+        <h1 className={styles.missionHeading}>Mission: {data.mission}</h1>
+        <div className={styles.imageContainer}>
+          {showTargetDropdown && (
+            <TargetDropdown
+              missionId={missionId}
+              targets={targets}
+              setTargets={setTargets}
+              dropdownCoordinates={dropdownCoordinates}
+              clickCoordinates={clickCoordinates}
+              setClickResult={setClickResult}
+              setShowCompletionModal={setShowCompletionModal}
+            />
+          )}
+          <img
+            src={data.image}
+            alt="Mission picture"
+            className="missionPicture"
           />
-        )}
-        <img
-          src={data.image}
-          alt="Mission picture"
-          className="missionPicture"
-        />
+        </div>
+        <p
+          data-testid="click-result"
+          className={`${styles.resultPara} ${clickResultClass}`}
+        >
+          {clickResultPara}
+        </p>
       </div>
-      <p
-        data-testid="click-result"
-        className={`${styles.resultPara} ${clickResultClass}`}
-      >
-        {clickResultPara}
-      </p>
       <div className={styles.leaderboardContainer}>
         <h2 className={styles.leaderboardHeading}>Leaderboard</h2>
         {result.leaderboardJson?.error && (
