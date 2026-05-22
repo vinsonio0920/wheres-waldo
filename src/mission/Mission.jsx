@@ -55,10 +55,6 @@ const TargetDropdown = ({
   if (targets.every((target) => target.sniped)) return;
 
   const handleTargetClick = async (event) => {
-    // move this to fetch! POST
-    // step 5: update target dropdown click
-    // step 6: update test! and done!
-
     const url = `${import.meta.env.VITE_SERVER_URL}/missions/${missionId}/targets/${event.currentTarget.dataset.id}/validate`;
 
     try {
@@ -95,7 +91,7 @@ const TargetDropdown = ({
       }
     } catch (error) {
       console.error(error);
-      // set click result to error!
+      setClickResult("fetch error");
     }
   };
 
@@ -184,7 +180,26 @@ const Mission = () => {
     leaderboard[leaderboard.length - 1].id;
   const data = result.missionJson.data.items[0];
   const clickResultClass =
-    clickResult && (clickResult === "error" ? styles.failure : styles.success);
+    clickResult &&
+    (clickResult === "error" || clickResult === "fetch error"
+      ? styles.failure
+      : styles.success);
+  let clickResultPara;
+
+  switch (clickResult) {
+    case "fetch error":
+      clickResultPara =
+        "There was an error validating the target. Please try again later.";
+      break;
+    case "error":
+      clickResultPara = "There is nothing here";
+      break;
+    case "":
+      clickResultPara = null;
+      break;
+    default:
+      clickResultPara = `You found ${clickResult}`;
+  }
 
   const handleButtonClick = async () => {
     if (leaderboard.length >= result.leaderboardJson.data.totalItems) return;
@@ -231,10 +246,7 @@ const Mission = () => {
         data-testid="click-result"
         className={`${styles.resultPara} ${clickResultClass}`}
       >
-        {clickResult &&
-          (clickResult === "error"
-            ? "There is nothing here"
-            : `You found ${clickResult}`)}
+        {clickResultPara}
       </p>
       <div className={styles.leaderboardContainer}>
         <h2 className={styles.leaderboardHeading}>Leaderboard</h2>
