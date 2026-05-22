@@ -44,6 +44,7 @@ const ConfirmationModal = () => {
 };
 
 const TargetDropdown = ({
+  missionId,
   targets,
   setTargets,
   dropdownCoordinates,
@@ -53,28 +54,29 @@ const TargetDropdown = ({
 }) => {
   if (targets.every((target) => target.sniped)) return;
 
-  const handleTargetClick = (event) => {
+  const handleTargetClick = async (event) => {
     // move this to fetch! POST
+    // step 5: update target dropdown click
+    // step 6: update test! and done!
 
-    const clickedTarget = targets.find(
-      (target) => Number(target.id) === Number(event.currentTarget.dataset.id),
-    );
+    const url = `${import.meta.env.VITE_SERVER_URL}/missions/${missionId}/targets/${event.currentTarget.dataset.id}/validate`;
 
-    let targetFound = false;
-    clickedTarget.locations.forEach((location) => {
-      // check if the click is inside one of the target's box
-      const isInsideX =
-        location[0][0] <= clickCoordinates[0] &&
-        clickCoordinates[0] <= location[0][1];
-      const isInsideY =
-        location[1][0] <= clickCoordinates[1] &&
-        clickCoordinates[1] <= location[1][1];
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        body: new URLSearchParams({
+          x: clickCoordinates[0],
+          y: clickCoordinates[1],
+        }),
+      });
+      if (!response.ok) throw new Error(`Response status: ${response.status}`);
 
-      if (isInsideX && isInsideY) {
-        targetFound = true;
+      const result = await response.json();
+      console.log(result.data?.items[0].targetFound);
 
+      if (result.data?.items[0].targetFound) {
         const newTargets = targets.map((target) => {
-          if (Number(target.id) === Number(event.currentTarget.dataset.id)) {
+          if (Number(target.id) === Number(event.target.dataset.id)) {
             return {
               ...target,
               sniped: true,
@@ -84,16 +86,17 @@ const TargetDropdown = ({
           }
         });
         setTargets(newTargets);
-        setClickResult(clickedTarget.name);
+        setClickResult(result.data.items[0].name);
 
         if (newTargets.every((target) => target.sniped))
           setShowCompletionModal(true);
+      } else {
+        setClickResult("error");
       }
-    });
-
-    // error handling
-    if (targetFound) return;
-    setClickResult("error");
+    } catch (error) {
+      console.error(error);
+      // set click result to error!
+    }
   };
 
   return (
@@ -174,6 +177,7 @@ const Mission = () => {
     );
   }
 
+  const missionId = result.missionJson?.data?.items[0].id;
   const cursor =
     leaderboard &&
     leaderboard.length > 0 &&
@@ -183,8 +187,6 @@ const Mission = () => {
     clickResult && (clickResult === "error" ? styles.failure : styles.success);
 
   const handleButtonClick = async () => {
-    // on error, show error message!
-
     if (leaderboard.length >= result.leaderboardJson.data.totalItems) return;
 
     const url = `${import.meta.env.VITE_SERVER_URL}/missions/${result.missionJson.data.items[0].id}/leaderboard?cursor=${cursor}`;
@@ -210,6 +212,7 @@ const Mission = () => {
       <div className={styles.imageContainer}>
         {showTargetDropdown && (
           <TargetDropdown
+            missionId={missionId}
             targets={targets}
             setTargets={setTargets}
             dropdownCoordinates={dropdownCoordinates}
