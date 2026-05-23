@@ -156,6 +156,11 @@
   flex: 3;
 }
 
+.dateTh,
+.dateTd {
+  flex: 1.5 !important;
+}
+
 .playerTd {
   margin-left: -0.9rem;
 }

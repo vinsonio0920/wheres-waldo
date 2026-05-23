@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Form, useLoaderData, useNavigate } from "react-router-dom";
+import { format } from "date-fns";
 import styles from "./Mission.module.css";
 
 const ConfirmationModal = () => {
@@ -285,7 +286,9 @@ const Mission = () => {
                   <td className={styles.rankTd}>{index + 1}</td>
                   <td className={styles.playerTd}>{entry.name}</td>
                   <td className={styles.timeTd}>{entry.time}s</td>
-                  <td className={styles.dateTd}>{entry.date}</td>
+                  <td className={styles.dateTd}>
+                    {format(entry.date, "MM/dd/yyyy")}
+                  </td>
                 </tr>
               ))}
             </tbody>
