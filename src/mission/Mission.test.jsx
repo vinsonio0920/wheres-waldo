@@ -348,84 +348,17 @@ describe("Mission component", () => {
     ).not.toBeInTheDocument();
   });
 
-  /*
-  it ("Shows target validation error", async () => {
-    const fetchMock = vi.spyOn(window, "fetch").mockImplementation(url => {
-      if (url === `${import.meta.env.VITE_SERVER_URL}/missions/6/leaderboard?cursor=13`) {
-        return Promise.resolve({
-          ok: true,
-          status: 200,
-          json: vi.fn().mockResolvedValue({
-            data: {
-              items: [
-                {
-                  id: "visjad",
-                  name: "Vinsonius",
-                  time: 1.12,
-                  date: "2026-05-15T18:25:24.750Z",
-                },
-                {
-                  id: "visjsadad",
-                  name: "Vinsonus",
-                  time: 2.12,
-                  date: "2026-05-15T18:25:24.750Z",
-                },
-                {
-                  id: "visjsasdwad",
-                  name: "Vinsonio",
-                  time: 1.33,
-                  date: "2026-05-15T18:25:24.750Z",
-                },
-              ],
-            },
-          }),
-        })
-      } else if (url === `${import.meta.env.VITE_SERVER_URL}/missions/6/targets/2/validate`) {
-        return Promise.resolve({
-          ok: true,
-          status: 200,
-          json: vi
-            .fn()
-            // first mock is a fetch error
-            .mockResolvedValueOnce({
-              error: {
-                code: 500,
-                message:
-                  "There was an error validating the target. Please try again later.",
-              },
-            })
-            // second is a not found error
-            .mockResolvedValueOnce({
-              data: {
-                updated: new Date(),
-                totalItems: 1,
-                startIndex: 1,
-                itemsPerPage: 1,
-                items: [
-                  {
-                    name: "panda",
-                    targetFound: false,
-                  },
-                ],
-              }
-            })
-            // and finally the last is found!
-            .mockResolvedValue({
-              data: {
-                updated: new Date(),
-                totalItems: 1,
-                startIndex: 1,
-                itemsPerPage: 1,
-                items: [
-                  {
-                    name: "panda",
-                    targetFound: true,
-                  },
-                ],
-              }
-            }),
-        });
-      }
+  it("Shows target validation error", async () => {
+    const fetchMock = vi.spyOn(window, "fetch").mockResolvedValueOnce({
+      ok: false,
+      status: 500,
+      json: vi.fn().mockResolvedValue({
+        error: {
+          code: 500,
+          message:
+            "There was an error validating the target. Please try again later.",
+        },
+      }),
     });
 
     const user = UserEvent.setup();
@@ -439,7 +372,10 @@ describe("Mission component", () => {
     expect(missionPicture).toBeInTheDocument();
     expect(screen.getByTestId("click-result")).toBeEmptyDOMElement();
     // initial fetch (don't know where this is from...)
-    expect(fetchMock).toHaveBeenNthCalledWith(1, `${import.meta.env.VITE_SERVER_URL}/missions/6/leaderboard?cursor=13`);
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      1,
+      `${import.meta.env.VITE_SERVER_URL}/missions/6/leaderboard?cursor=13`,
+    );
 
     // Main test
     let targetDropdown;
@@ -459,40 +395,36 @@ describe("Mission component", () => {
 
     await user.click(targetItems[0]);
     expect(
-      await screen.findByText(/There was an error validating the target\. Please try again later\./i),
+      await screen.findByText(
+        /There was an error validating the target\. Please try again later\./i,
+      ),
     ).toBeInTheDocument();
     expect(
       screen.queryByRole("list", { name: /^Target dropdown$/i }),
     ).not.toBeInTheDocument();
-    expect(fetchMock).toHaveBeenNthCalledWith(2, `${import.meta.env.VITE_SERVER_URL}/missions/6/targets/2/validate`, 
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      `${import.meta.env.VITE_SERVER_URL}/missions/6/targets/2/validate`,
       expect.objectContaining({
         method: "POST",
-      })
+      }),
     );
   });
-  */
 
-  /*
   it("Renders completion modal correctly", async () => {
     const fetchMock = vi.spyOn(window, "fetch").mockResolvedValueOnce({
       ok: true,
       status: 200,
-      json: vi
-        .fn()
-        .mockResolvedValue({
+      json: vi.fn().mockResolvedValue({
+        data: {
           updated: new Date(),
           totalItems: 1,
           startIndex: 1,
           itemsPerPage: 1,
-          items: [
-            {
-              name: "panda",
-              targetFound: true,
-            },
-          ],
-        }),
+          items: [{ name: "panda", targetFound: true }],
+        },
+      }),
     });
-
     const user = UserEvent.setup();
 
     render(<RouterProvider router={router} />);
@@ -505,6 +437,10 @@ describe("Mission component", () => {
     expect(screen.getByTestId("click-result")).toBeEmptyDOMElement();
     expect(screen.queryByRole("form")).not.toBeInTheDocument();
     expect(screen.queryByTestId("overlay")).not.toBeInTheDocument();
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      1,
+      `${import.meta.env.VITE_SERVER_URL}/missions/6/leaderboard?cursor=13`,
+    );
 
     // Find all targets
     let targetDropdown;
@@ -521,13 +457,17 @@ describe("Mission component", () => {
     targetItems = within(targetDropdown).getAllByRole("button");
 
     await user.click(targetItems[0]);
-    expect(fetchMock).toHaveBeenCalledWith(
-      `${import.meta.env.VITE_SERVER_URL}/missions/6/leaderboard?cursor=13`,
-    );
     expect(await screen.findByText(/^You found panda$/i)).toBeInTheDocument();
     expect(
       screen.queryByRole("list", { name: /^Target dropdown$/i }),
     ).not.toBeInTheDocument();
+    expect(fetchMock).toHaveBeenNthCalledWith(
+      2,
+      `${import.meta.env.VITE_SERVER_URL}/missions/6/targets/2/validate`,
+      expect.objectContaining({
+        method: "POST",
+      }),
+    );
 
     // Main test
     expect(screen.getByTestId("overlay")).toBeInTheDocument();
@@ -553,7 +493,6 @@ describe("Mission component", () => {
     ).toBeInTheDocument();
     // button click will be tested as an integration test!
   });
-  */
 
   it("Renders mission error correctly", async () => {
     const mockMissionErrorRoutes = [
@@ -736,8 +675,8 @@ describe("Mission component", () => {
 
   it("Renders leaderboard load more error correctly", async () => {
     const fetchMock = vi.spyOn(window, "fetch").mockResolvedValue({
-      ok: true,
-      status: 200,
+      ok: false,
+      status: 500,
       json: vi.fn().mockResolvedValue({
         error: {
           code: 500,

@@ -31,6 +31,6 @@ describe("Attributions component", () => {
       name: /^Attributions list$/i,
     });
     expect(attributionsList).toBeInTheDocument();
-    expect(within(attributionsList)).toHaveLength(3);
+    expect(within(attributionsList).getAllByRole("listitem")).toHaveLength(3);
   });
 });
