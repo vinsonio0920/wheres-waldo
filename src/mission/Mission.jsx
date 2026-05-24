@@ -1,23 +1,20 @@
 import { useEffect, useState } from "react";
-import { Form, useLoaderData, useNavigate } from "react-router-dom";
+import { useFetcher, useLoaderData } from "react-router-dom";
 import { format } from "date-fns";
 import styles from "./Mission.module.css";
 
-const ConfirmationModal = () => {
-  const navigate = useNavigate();
-
-  const handleSubmitClick = () => {
-    // upload time to leaderboard
-    navigate("/");
-  };
+const CompletionModal = ({ missionId }) => {
+  const fetcher = useFetcher();
+  const [name, setName] = useState(localStorage.getItem("name") || "");
 
   return (
     <>
       <div data-testid="overlay" className="overlay"></div>
-      <Form
+      <fetcher.Form
         data-testid="completed-modal"
         method="POST"
         className={styles.completedModal}
+        autoComplete="off"
       >
         <h2>🔥 You found all the targets in 123 seconds! You ranked 12</h2>
         <div>
@@ -28,6 +25,8 @@ const ConfirmationModal = () => {
             type="text"
             id="name"
             name="name"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
             required
             maxLength="26"
             placeholder="Name (required)"
@@ -35,11 +34,18 @@ const ConfirmationModal = () => {
           />
         </div>
         <div>
-          <button type="submit" onClick={handleSubmitClick}>
-            Submit & Return to the Homepage
-          </button>
+          <input
+            type="hidden"
+            name="missionId"
+            id="missionId"
+            value={missionId}
+          />
         </div>
-      </Form>
+        <div>
+          <button type="submit">Submit Score</button>
+          <button type="button">Return to the homepage</button>
+        </div>
+      </fetcher.Form>
     </>
   );
 };
@@ -222,7 +228,7 @@ const Mission = () => {
 
   return (
     <>
-      {showCompletionModal && <ConfirmationModal />}
+      {showCompletionModal && <CompletionModal missionId={missionId} />}
       <div className={styles.gameContainer}>
         <h1 className={styles.missionHeading}>Mission: {data.mission}</h1>
         <div className={styles.imageContainer}>

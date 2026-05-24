@@ -1,3 +1,4 @@
+import { missionAction } from "./actions";
 import App from "./App";
 import { Attributions } from "./attributions/Attributions";
 import { ErrorPage } from "./errorPage/ErrorPage";
@@ -19,6 +20,7 @@ const routes = [
         path: "/missions/:missionId",
         element: <Mission />,
         loader: missionLoader,
+        action: missionAction,
       },
       {
         path: "/attributions",
