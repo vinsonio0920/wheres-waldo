@@ -1,12 +1,11 @@
 async function missionAction({ request }) {
-  // show error messages!
+  // remove submit score button on success
+  // redirect users
   const formData = Object.fromEntries(await request.formData());
   const url = `${import.meta.env.VITE_SERVER_URL}/missions/${formData.missionId}/leaderboard`;
-  console.log(url);
 
   try {
     const { name, missionId } = formData;
-    console.log(name);
     const response = await fetch(url, {
       method: "POST",
       body: new URLSearchParams({

@@ -23,7 +23,7 @@ const CompletionModal = ({ missionId }) => {
       result =
         "There was an error submitting your score. Please try again later.";
     }
-    resultClass = styles.error;
+    resultClass = styles.failure;
   }
 
   return (
@@ -49,9 +49,9 @@ const CompletionModal = ({ missionId }) => {
             required
             maxLength="26"
             placeholder="Name (required)"
-            className={styles.nameInput}
+            className={`${styles.nameInput} ${resultClass === styles.failure && styles.invalid} ${resultClass === styles.success && styles.submitted}`}
           />
-          <p className={resultClass}>{result}</p>
+          <p className={`${styles.formResult} ${resultClass}`}>{result}</p>
         </div>
         <div>
           <input
@@ -62,8 +62,12 @@ const CompletionModal = ({ missionId }) => {
           />
         </div>
         <div>
-          <button type="submit">Submit Score</button>
-          <button type="button">Return to the homepage</button>
+          <button type="submit" className={styles.submitButton}>
+            Submit Score
+          </button>
+          <button type="button" className={styles.returnButton}>
+            Return to the homepage
+          </button>
         </div>
       </fetcher.Form>
     </>

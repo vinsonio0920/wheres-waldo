@@ -78,13 +78,23 @@
   margin: 1rem 1rem 2rem 1rem;
 }
 
-.resultPara.success {
+/* Result Paras */
+
+.formResult {
+  margin-top: 0.5rem;
+}
+
+.resultPara.success,
+.formResult.success {
   color: #008000;
 }
 
-.resultPara.failure {
+.resultPara.failure,
+.formResult.failure {
   color: #ff0000;
 }
+
+/* Leaderboard */
 
 .leaderboardContainer {
   margin: 1rem;
@@ -212,6 +222,8 @@
   margin: 1rem 0 0.5rem 0;
 }
 
+/* Completed Modal */
+
 .completedModal {
   position: fixed;
   top: 50%;
@@ -235,19 +247,35 @@
 
 .completedModal button {
   font-size: 1rem;
-  background-color: #16a34a;
-  color: #fff;
   width: 100%;
   padding: 0.6rem;
-  margin-top: 2rem;
 }
 
-.completedModal button:hover {
+.completedModal .submitButton {
+  background-color: #16a34a;
+  color: #fff;
+  margin-top: 1.25rem;
+}
+
+.completedModal .submitButton:hover {
   background-color: #109741;
 }
 
-.completedModal button:active {
+.completedModal .submitButton:active {
   background-color: #16a34a;
+}
+
+.completedModal .returnButton {
+  background-color: #eaeaea;
+  margin-top: 1rem;
+}
+
+.completedModal .returnButton:hover {
+  background-color: #dadada;
+}
+
+.completedModal .returnButton:active {
+  background-color: #eaeaea;
 }
 
 .nameInput {
@@ -258,6 +286,19 @@
   border-radius: 5px;
   padding: 0.5rem;
   margin-top: 2rem;
+}
+
+.nameInput.invalid {
+  border: none;
+  border: 1px solid #ff0000;
+  outline: 1px solid #ff0000;
+  background-color: #fff8f8;
+}
+
+.nameInput.submitted {
+  border: none;
+  border: 1px solid #008000;
+  outline: 1px solid #008000;
 }
 
 @media (min-width: 600px) {
