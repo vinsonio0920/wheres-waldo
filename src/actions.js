@@ -1,6 +1,4 @@
 async function missionAction({ request }) {
-  // remove submit score button on success
-  // redirect users
   const formData = Object.fromEntries(await request.formData());
   const url = `${import.meta.env.VITE_SERVER_URL}/missions/${formData.missionId}/leaderboard`;
 
@@ -16,6 +14,9 @@ async function missionAction({ request }) {
     });
     if (!response.ok && response.status !== 400)
       throw new Error(`Response status: ${response.status}`);
+
+    // save the name to localStorage for future forms
+    localStorage.setItem("name", name);
 
     const result = await response.json();
     return result;

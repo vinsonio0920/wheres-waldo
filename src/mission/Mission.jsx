@@ -1,18 +1,20 @@
 import { useEffect, useState } from "react";
-import { useFetcher, useLoaderData } from "react-router-dom";
+import { useFetcher, useLoaderData, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import styles from "./Mission.module.css";
 
 const CompletionModal = ({ missionId }) => {
   const fetcher = useFetcher();
+  const navigate = useNavigate();
   const [name, setName] = useState(localStorage.getItem("name") || "");
   let result;
   let resultClass;
+  let showSubmitButton = true;
 
   if (fetcher.data?.data?.items?.[0]) {
     result = "Score submitted!";
     resultClass = styles.success;
-    // remove submit score
+    showSubmitButton = false;
   } else if (fetcher.data?.error) {
     if (fetcher.data.error.code === 400) {
       // only show name error as other form inputs will be taken care of
@@ -25,6 +27,11 @@ const CompletionModal = ({ missionId }) => {
     }
     resultClass = styles.failure;
   }
+
+  const handleReturnClick = () => {
+    // redirects the user back to the homepage
+    navigate("/");
+  };
 
   return (
     <>
@@ -50,6 +57,7 @@ const CompletionModal = ({ missionId }) => {
             maxLength="26"
             placeholder="Name (required)"
             className={`${styles.nameInput} ${resultClass === styles.failure && styles.invalid} ${resultClass === styles.success && styles.submitted}`}
+            disabled={!showSubmitButton}
           />
           <p className={`${styles.formResult} ${resultClass}`}>{result}</p>
         </div>
@@ -62,10 +70,16 @@ const CompletionModal = ({ missionId }) => {
           />
         </div>
         <div>
-          <button type="submit" className={styles.submitButton}>
-            Submit Score
-          </button>
-          <button type="button" className={styles.returnButton}>
+          {showSubmitButton && (
+            <button type="submit" className={styles.submitButton}>
+              Submit Score
+            </button>
+          )}
+          <button
+            type="button"
+            className={styles.returnButton}
+            onClick={handleReturnClick}
+          >
             Return to the homepage
           </button>
         </div>
