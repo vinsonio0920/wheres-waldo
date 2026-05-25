@@ -1,13 +1,12 @@
 async function missionAction({ request }) {
-  // if error don't do anything and show error
-  // redirect back to the homepage
-
+  // show error messages!
   const formData = Object.fromEntries(await request.formData());
   const url = `${import.meta.env.VITE_SERVER_URL}/missions/${formData.missionId}/leaderboard`;
   console.log(url);
 
   try {
     const { name, missionId } = formData;
+    console.log(name);
     const response = await fetch(url, {
       method: "POST",
       body: new URLSearchParams({

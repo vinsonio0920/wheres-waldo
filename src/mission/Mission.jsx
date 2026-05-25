@@ -6,6 +6,25 @@ import styles from "./Mission.module.css";
 const CompletionModal = ({ missionId }) => {
   const fetcher = useFetcher();
   const [name, setName] = useState(localStorage.getItem("name") || "");
+  let result;
+  let resultClass;
+
+  if (fetcher.data?.data?.items?.[0]) {
+    result = "Score submitted!";
+    resultClass = styles.success;
+    // remove submit score
+  } else if (fetcher.data?.error) {
+    if (fetcher.data.error.code === 400) {
+      // only show name error as other form inputs will be taken care of
+      result = fetcher.data.error.errors.find(
+        (error) => error.path === "name",
+      ).msg;
+    } else {
+      result =
+        "There was an error submitting your score. Please try again later.";
+    }
+    resultClass = styles.error;
+  }
 
   return (
     <>
@@ -32,6 +51,7 @@ const CompletionModal = ({ missionId }) => {
             placeholder="Name (required)"
             className={styles.nameInput}
           />
+          <p className={resultClass}>{result}</p>
         </div>
         <div>
           <input
