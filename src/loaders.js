@@ -2,7 +2,9 @@ async function missionsLoader() {
   const url = `${import.meta.env.VITE_SERVER_URL}/missions`;
 
   try {
-    const response = await fetch(url);
+    const response = await fetch(url, {
+      credentials: "include",
+    });
 
     const result = await response.json();
     return result;
@@ -26,7 +28,11 @@ async function missionLoader({ params }) {
   ];
 
   try {
-    const requests = urls.map((url) => fetch(url));
+    const requests = urls.map((url) =>
+      fetch(url, {
+        credentials: "include",
+      }),
+    );
     const responses = await Promise.all(requests);
 
     const jsons = responses.map((response) => response.json());

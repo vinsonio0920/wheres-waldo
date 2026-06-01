@@ -109,6 +109,7 @@ const TargetDropdown = ({
           x: clickCoordinates[0],
           y: clickCoordinates[1],
         }),
+        credentials: "include",
       });
       if (!response.ok) throw new Error(`Response status: ${response.status}`);
 
@@ -250,7 +251,9 @@ const Mission = () => {
 
     const url = `${import.meta.env.VITE_SERVER_URL}/missions/${result.missionJson.data.items[0].id}/leaderboard?cursor=${cursor}`;
     try {
-      const response = await fetch(url);
+      const response = await fetch(url, {
+        credentials: "include",
+      });
       if (!response.ok) throw new Error(`Response status: ${response.status}`);
 
       const result = await response.json();

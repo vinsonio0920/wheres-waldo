@@ -11,6 +11,7 @@ async function missionAction({ request }) {
         time: "11.12", // placeholder time
         missionId,
       }),
+      credentials: "include",
     });
     if (!response.ok && response.status !== 400)
       throw new Error(`Response status: ${response.status}`);
