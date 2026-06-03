@@ -4,7 +4,7 @@ import { format } from "date-fns";
 import styles from "./Mission.module.css";
 import { formatTime } from "../utils";
 
-const CompletionModal = ({ missionId, timeTaken }) => {
+const CompletionModal = ({ missionId, timeTaken, rank }) => {
   const fetcher = useFetcher();
   const navigate = useNavigate();
   const [name, setName] = useState(localStorage.getItem("name") || "");
@@ -43,7 +43,9 @@ const CompletionModal = ({ missionId, timeTaken }) => {
         className={styles.completedModal}
         autoComplete="off"
       >
-        <h2>🔥 You found all the targets in {timeTaken}! You ranked 12</h2>
+        <h2>
+          🔥 You found all the targets in {timeTaken}! You ranked {rank}
+        </h2>
         <div>
           <label htmlFor="name" className="srOnly">
             Name
@@ -98,6 +100,7 @@ const TargetDropdown = ({
   setClickResult,
   setShowCompletionModal,
   setTimeTaken,
+  setRank,
 }) => {
   if (targets.every((target) => target.sniped)) return;
 
@@ -131,10 +134,11 @@ const TargetDropdown = ({
         setTargets(newTargets);
         setClickResult(result.data.items[0].name);
 
-        if (newTargets.every((target) => target.sniped))
+        if (newTargets.every((target) => target.sniped)) {
           setShowCompletionModal(true);
-        console.log(result.data?.items[0].timeTaken);
-        setTimeTaken(result.data?.items[0].timeTaken);
+          setTimeTaken(result.data?.items[0].timeTaken);
+          setRank(result.data?.items[0].rank);
+        }
       } else {
         setClickResult("error");
       }
@@ -184,6 +188,7 @@ const Mission = () => {
   const [clickResult, setClickResult] = useState("");
   const [showCompletionModal, setShowCompletionModal] = useState(false);
   const [timeTaken, setTimeTaken] = useState(null);
+  const [rank, setRank] = useState(null);
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -275,7 +280,11 @@ const Mission = () => {
   return (
     <>
       {showCompletionModal && (
-        <CompletionModal missionId={missionId} timeTaken={timeTaken} />
+        <CompletionModal
+          missionId={missionId}
+          timeTaken={timeTaken}
+          rank={rank}
+        />
       )}
       <div className={styles.gameContainer}>
         <h1 className={styles.missionHeading}>Mission: {data.mission}</h1>
@@ -290,6 +299,7 @@ const Mission = () => {
               setClickResult={setClickResult}
               setShowCompletionModal={setShowCompletionModal}
               setTimeTaken={setTimeTaken}
+              setRank={setRank}
             />
           )}
           <img
