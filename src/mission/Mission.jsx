@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 import { useFetcher, useLoaderData, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import styles from "./Mission.module.css";
+import { formatTime } from "../utils";
 
-const CompletionModal = ({ missionId }) => {
+const CompletionModal = ({ missionId, timeTaken }) => {
   const fetcher = useFetcher();
   const navigate = useNavigate();
   const [name, setName] = useState(localStorage.getItem("name") || "");
@@ -42,7 +43,7 @@ const CompletionModal = ({ missionId }) => {
         className={styles.completedModal}
         autoComplete="off"
       >
-        <h2>🔥 You found all the targets in 123 seconds! You ranked 12</h2>
+        <h2>🔥 You found all the targets in {timeTaken}! You ranked 12</h2>
         <div>
           <label htmlFor="name" className="srOnly">
             Name
@@ -96,6 +97,7 @@ const TargetDropdown = ({
   clickCoordinates,
   setClickResult,
   setShowCompletionModal,
+  setTimeTaken,
 }) => {
   if (targets.every((target) => target.sniped)) return;
 
@@ -131,6 +133,8 @@ const TargetDropdown = ({
 
         if (newTargets.every((target) => target.sniped))
           setShowCompletionModal(true);
+        console.log(result.data?.items[0].timeTaken);
+        setTimeTaken(result.data?.items[0].timeTaken);
       } else {
         setClickResult("error");
       }
@@ -179,6 +183,7 @@ const Mission = () => {
   );
   const [clickResult, setClickResult] = useState("");
   const [showCompletionModal, setShowCompletionModal] = useState(false);
+  const [timeTaken, setTimeTaken] = useState(null);
 
   useEffect(() => {
     const handleClick = (event) => {
@@ -269,7 +274,9 @@ const Mission = () => {
 
   return (
     <>
-      {showCompletionModal && <CompletionModal missionId={missionId} />}
+      {showCompletionModal && (
+        <CompletionModal missionId={missionId} timeTaken={timeTaken} />
+      )}
       <div className={styles.gameContainer}>
         <h1 className={styles.missionHeading}>Mission: {data.mission}</h1>
         <div className={styles.imageContainer}>
@@ -282,6 +289,7 @@ const Mission = () => {
               clickCoordinates={clickCoordinates}
               setClickResult={setClickResult}
               setShowCompletionModal={setShowCompletionModal}
+              setTimeTaken={setTimeTaken}
             />
           )}
           <img
@@ -332,7 +340,7 @@ const Mission = () => {
                 <tr key={entry.id}>
                   <td className={styles.rankTd}>{index + 1}</td>
                   <td className={styles.playerTd}>{entry.name}</td>
-                  <td className={styles.timeTd}>{entry.time}s</td>
+                  <td className={styles.timeTd}>{formatTime(entry.time)}</td>
                   <td className={styles.dateTd}>
                     {format(entry.date, "MM/dd/yyyy")}
                   </td>
