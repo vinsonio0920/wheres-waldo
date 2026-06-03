@@ -229,10 +229,13 @@ const Mission = () => {
   }
 
   const missionId = result.missionJson?.data?.items[0].id;
-  const cursor =
-    leaderboard &&
-    leaderboard.length > 0 &&
-    leaderboard[leaderboard.length - 1].id;
+  const cursor = leaderboard &&
+    leaderboard.length > 0 && {
+      time_id: {
+        time: leaderboard[leaderboard.length - 1].time,
+        id: leaderboard[leaderboard.length - 1].id,
+      },
+    };
   const data = result.missionJson.data.items[0];
   const clickResultClass =
     clickResult &&
@@ -259,7 +262,7 @@ const Mission = () => {
   const handleButtonClick = async () => {
     if (leaderboard.length >= result.leaderboardJson.data.totalItems) return;
 
-    const url = `${import.meta.env.VITE_SERVER_URL}/missions/${result.missionJson.data.items[0].id}/leaderboard?cursor=${cursor}`;
+    const url = `${import.meta.env.VITE_SERVER_URL}/missions/${result.missionJson.data.items[0].id}/leaderboard?cursor=${JSON.stringify(cursor)}`;
     try {
       const response = await fetch(url, {
         credentials: "include",
