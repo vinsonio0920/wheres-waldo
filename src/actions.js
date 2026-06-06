@@ -8,7 +8,6 @@ async function missionAction({ request }) {
       method: "POST",
       body: new URLSearchParams({
         name,
-        time: "11.12", // placeholder time
         missionId,
       }),
       credentials: "include",

@@ -157,13 +157,20 @@ const TargetDropdown = ({
       }}
       aria-label="Target dropdown"
     >
-      {targets.map((target) => (
-        <li key={target.id}>
-          <button type="button" onClick={handleTargetClick} data-id={target.id}>
-            {target.name}
-          </button>
-        </li>
-      ))}
+      {targets.map(
+        (target) =>
+          !target.sniped && (
+            <li key={target.id}>
+              <button
+                type="button"
+                onClick={handleTargetClick}
+                data-id={target.id}
+              >
+                {target.name}
+              </button>
+            </li>
+          ),
+      )}
     </ul>
   );
 };
