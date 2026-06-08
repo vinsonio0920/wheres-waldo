@@ -93,6 +93,7 @@ const CompletionModal = ({ missionId, timeTaken, rank }) => {
 
 const TargetDropdown = ({
   missionId,
+  missionType,
   targets,
   setTargets,
   dropdownCoordinates,
@@ -148,6 +149,62 @@ const TargetDropdown = ({
     }
   };
 
+  const handleMultipleSameTargetClick = async () => {
+    const url = `${import.meta.env.VITE_SERVER_URL}/missions/${missionId}/targets/multiple/validate`;
+    const unsnipedTargetIds = targets.reduce((filtered, target) => {
+      if (!target.sniped) {
+        return filtered.concat(target.id);
+      }
+
+      return filtered;
+    }, []);
+
+    try {
+      const response = await fetch(url, {
+        method: "POST",
+        body: new URLSearchParams({
+          x: clickCoordinates[0],
+          y: clickCoordinates[1],
+          targetIds: JSON.stringify(unsnipedTargetIds),
+        }),
+        credentials: "include",
+      });
+      if (!response.ok)
+        throw new Error(
+          `Response status: ${response.status}. There was an error validating the body!`,
+        );
+
+      const result = await response.json();
+
+      if (result.data?.items[0].targetFound) {
+        const newTargets = targets.map((target) => {
+          if (Number(target.id) === Number(result.data?.items[0].id)) {
+            console.log("Found!");
+            return {
+              ...target,
+              sniped: true,
+            };
+          } else {
+            return target;
+          }
+        });
+        setTargets(newTargets);
+        setClickResult(result.data.items[0].name);
+
+        if (newTargets.every((target) => target.sniped)) {
+          setShowCompletionModal(true);
+          setTimeTaken(result.data?.items[0].timeTaken);
+          setRank(result.data?.items[0].rank);
+        }
+      } else {
+        setClickResult("error");
+      }
+    } catch (error) {
+      console.error(error);
+      setClickResult("fetch error");
+    }
+  };
+
   return (
     <ul
       className={styles.targetDropdown}
@@ -157,19 +214,27 @@ const TargetDropdown = ({
       }}
       aria-label="Target dropdown"
     >
-      {targets.map(
-        (target) =>
-          !target.sniped && (
-            <li key={target.id}>
-              <button
-                type="button"
-                onClick={handleTargetClick}
-                data-id={target.id}
-              >
-                {target.name}
-              </button>
-            </li>
-          ),
+      {missionType === "multiple same" ? (
+        <li>
+          <button type="button" onClick={handleMultipleSameTargetClick}>
+            {targets[0].name}
+          </button>
+        </li>
+      ) : (
+        targets.map(
+          (target) =>
+            !target.sniped && (
+              <li key={target.id}>
+                <button
+                  type="button"
+                  onClick={handleTargetClick}
+                  data-id={target.id}
+                >
+                  {target.name}
+                </button>
+              </li>
+            ),
+        )
       )}
     </ul>
   );
@@ -236,6 +301,7 @@ const Mission = () => {
   }
 
   const missionId = result.missionJson?.data?.items[0].id;
+  const missionType = result.missionJson?.data?.items[0].type;
   const cursor = leaderboard &&
     leaderboard.length > 0 && {
       time_id: {
@@ -302,6 +368,7 @@ const Mission = () => {
           {showTargetDropdown && (
             <TargetDropdown
               missionId={missionId}
+              missionType={missionType}
               targets={targets}
               setTargets={setTargets}
               dropdownCoordinates={dropdownCoordinates}
