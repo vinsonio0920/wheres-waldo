@@ -3,6 +3,7 @@ import { useFetcher, useLoaderData, useNavigate } from "react-router-dom";
 import { format } from "date-fns";
 import styles from "./Mission.module.css";
 import { formatTime } from "../utils";
+import { checkmarkPng } from "../assets";
 
 const CompletionModal = ({ missionId, timeTaken, rank }) => {
   const fetcher = useFetcher();
@@ -127,6 +128,7 @@ const TargetDropdown = ({
             return {
               ...target,
               sniped: true,
+              snipedCoords: clickCoordinates,
             };
           } else {
             return target;
@@ -179,10 +181,10 @@ const TargetDropdown = ({
       if (result.data?.items[0].targetFound) {
         const newTargets = targets.map((target) => {
           if (Number(target.id) === Number(result.data?.items[0].id)) {
-            console.log("Found!");
             return {
               ...target,
               sniped: true,
+              snipedCoords: clickCoordinates,
             };
           } else {
             return target;
@@ -255,6 +257,7 @@ const Mission = () => {
     result.missionJson?.data?.items[0]?.targets.map((target) => ({
       ...target,
       sniped: false,
+      snipedCoords: null,
     })),
   );
   const [clickResult, setClickResult] = useState("");
@@ -365,6 +368,24 @@ const Mission = () => {
       <div className={styles.gameContainer}>
         <h1 className={styles.missionHeading}>Mission: {data.mission}</h1>
         <div className={styles.imageContainer}>
+          <ul className={styles.markers}>
+            {targets.map(
+              (target) =>
+                target.sniped && (
+                  <li key={target.id}>
+                    <img
+                      src={checkmarkPng}
+                      width="30"
+                      style={{
+                        left: target.snipedCoords[0],
+                        top: target.snipedCoords[1],
+                      }}
+                      alt="Checkmark marker"
+                    ></img>
+                  </li>
+                ),
+            )}
+          </ul>
           {showTargetDropdown && (
             <TargetDropdown
               missionId={missionId}
