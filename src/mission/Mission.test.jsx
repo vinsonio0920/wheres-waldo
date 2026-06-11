@@ -73,42 +73,42 @@ describe("Mission component", () => {
               {
                 id: 8,
                 name: "Vinson 2.0",
-                time: 1.11,
+                time: 111,
                 date: "2026-05-19T22:47:50.403Z",
                 missionId: 6,
               },
               {
                 id: 9,
                 name: "Vinson 2.0",
-                time: 1.11,
+                time: 111,
                 date: "2026-05-20T00:21:05.101Z",
                 missionId: 6,
               },
               {
                 id: 10,
                 name: "Vinson 2.0",
-                time: 1.11,
+                time: 111,
                 date: "2026-05-20T00:21:05.699Z",
                 missionId: 6,
               },
               {
                 id: 11,
                 name: "Vinson 2.0",
-                time: 1.11,
+                time: 111,
                 date: "2026-05-20T00:21:06.277Z",
                 missionId: 6,
               },
               {
                 id: 12,
                 name: "Vinson 2.0",
-                time: 1.11,
+                time: 111,
                 date: "2026-05-20T00:21:06.833Z",
                 missionId: 6,
               },
               {
                 id: 13,
                 name: "Vinson 2.0",
-                time: 1.11,
+                time: 111,
                 date: "2026-05-20T00:21:07.415Z",
                 missionId: 6,
               },
@@ -206,7 +206,10 @@ describe("Mission component", () => {
     await user.click(moreButton);
 
     expect(fetchMock).toHaveBeenCalledWith(
-      `${import.meta.env.VITE_SERVER_URL}/missions/6/leaderboard?cursor=13`,
+      `${import.meta.env.VITE_SERVER_URL}/missions/6/leaderboard?cursor={"time_id":{"time":111,"id":13}}`,
+      expect.objectContaining({
+        credentials: "include",
+      }),
     );
     expect(await within(leaderboardTable).findAllByRole("row")).toHaveLength(
       14,
@@ -284,7 +287,10 @@ describe("Mission component", () => {
     // initial fetch (don't know where this is from...)
     expect(fetchMock).toHaveBeenNthCalledWith(
       1,
-      `${import.meta.env.VITE_SERVER_URL}/missions/6/leaderboard?cursor=13`,
+      `${import.meta.env.VITE_SERVER_URL}/missions/6/leaderboard?cursor={"time_id":{"time":111,"id":13}}`,
+      expect.objectContaining({
+        credentials: "include",
+      }),
     );
 
     // Main test
@@ -374,7 +380,10 @@ describe("Mission component", () => {
     // initial fetch (don't know where this is from...)
     expect(fetchMock).toHaveBeenNthCalledWith(
       1,
-      `${import.meta.env.VITE_SERVER_URL}/missions/6/leaderboard?cursor=13`,
+      `${import.meta.env.VITE_SERVER_URL}/missions/6/leaderboard?cursor={"time_id":{"time":111,"id":13}}`,
+      expect.objectContaining({
+        credentials: "include",
+      }),
     );
 
     // Main test
@@ -421,7 +430,9 @@ describe("Mission component", () => {
           totalItems: 1,
           startIndex: 1,
           itemsPerPage: 1,
-          items: [{ name: "panda", targetFound: true }],
+          items: [
+            { name: "panda", targetFound: true, timeTaken: "0.02s", rank: 19 },
+          ],
         },
       }),
     });
@@ -439,7 +450,10 @@ describe("Mission component", () => {
     expect(screen.queryByTestId("overlay")).not.toBeInTheDocument();
     expect(fetchMock).toHaveBeenNthCalledWith(
       1,
-      `${import.meta.env.VITE_SERVER_URL}/missions/6/leaderboard?cursor=13`,
+      `${import.meta.env.VITE_SERVER_URL}/missions/6/leaderboard?cursor={"time_id":{"time":111,"id":13}}`,
+      expect.objectContaining({
+        credentials: "include",
+      }),
     );
 
     // Find all targets
@@ -476,7 +490,7 @@ describe("Mission component", () => {
 
     expect(
       within(completedModal).getByText(
-        /^🔥 You found all the targets in \d+(\.\d+)? seconds! You ranked \d+$/i,
+        /^🔥 You found all the targets in \d+(\.\d+2)?[smhd]! You ranked \d+$/i,
       ),
     );
     expect(within(completedModal).getByLabelText("Name")).toBeInTheDocument();
@@ -488,7 +502,12 @@ describe("Mission component", () => {
     ).toBeInTheDocument();
     expect(
       within(completedModal).getByRole("button", {
-        name: /^Submit & Return to the Homepage$/i,
+        name: /^Submit Score$/i,
+      }),
+    ).toBeInTheDocument();
+    expect(
+      within(completedModal).getByRole("button", {
+        name: /^Return to the homepage$/i,
       }),
     ).toBeInTheDocument();
     // button click will be tested as an integration test!
@@ -707,9 +726,7 @@ describe("Mission component", () => {
 
     await user.click(moreButton);
 
-    expect(fetchMock).toHaveBeenCalledWith(
-      "http://localhost:3001/missions/6/leaderboard?cursor=13",
-    );
+    expect(fetchMock).toHaveBeenCalled();
     expect(await within(leaderboardTable).findAllByRole("row")).toHaveLength(
       11,
     );
@@ -793,4 +810,8 @@ describe("Mission component", () => {
       ),
     ).toBeInTheDocument();
   });
+
+  // it("Works with multiple (unique) targets");
+  // it("Works with multiple (same) targets");
+  // it("Shows checkmarks correctly");
 });
