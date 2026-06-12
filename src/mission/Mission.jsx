@@ -368,7 +368,7 @@ const Mission = () => {
       <div className={styles.gameContainer}>
         <h1 className={styles.missionHeading}>Mission: {data.mission}</h1>
         <div className={styles.imageContainer}>
-          <ul className={styles.markers}>
+          <ul className={styles.markers} aria-label="Checkmarks list">
             {targets.map(
               (target) =>
                 target.sniped && (

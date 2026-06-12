@@ -282,8 +282,12 @@ describe("Mission component", () => {
     const missionPicture = await screen.findByRole("img", {
       name: /^Mission picture$/i,
     });
+    const checkmarkList = await screen.findByRole("list", {
+      name: /^Checkmarks list$/i,
+    });
     expect(missionPicture).toBeInTheDocument();
     expect(screen.getByTestId("click-result")).toBeEmptyDOMElement();
+    expect(within(checkmarkList).queryAllByAltText("listitem")).toHaveLength(0);
     // initial fetch (don't know where this is from...)
     expect(fetchMock).toHaveBeenNthCalledWith(
       1,
@@ -315,6 +319,7 @@ describe("Mission component", () => {
     expect(
       screen.queryByRole("list", { name: /^Target dropdown$/i }),
     ).not.toBeInTheDocument();
+    expect(within(checkmarkList).queryAllByRole("listitem")).toHaveLength(0);
     expect(fetchMock).toHaveBeenNthCalledWith(
       2,
       `${import.meta.env.VITE_SERVER_URL}/missions/6/targets/2/validate`,
@@ -339,6 +344,7 @@ describe("Mission component", () => {
     expect(
       screen.queryByRole("list", { name: /^Target dropdown$/i }),
     ).not.toBeInTheDocument();
+    expect(within(checkmarkList).queryAllByRole("listitem")).toHaveLength(1);
     expect(fetchMock).toHaveBeenNthCalledWith(
       3,
       `${import.meta.env.VITE_SERVER_URL}/missions/6/targets/2/validate`,
@@ -811,7 +817,243 @@ describe("Mission component", () => {
     ).toBeInTheDocument();
   });
 
-  // it("Works with multiple (unique) targets");
+  it("Works with multiple unique targets", async () => {
+    const mockMultipleUniqueRoutes = [
+      {
+        path: "/missions/:missionId",
+        element: <Mission />,
+        loader: () => ({
+          missionJson: {
+            data: {
+              updated: "2026-06-12T22:15:35.461Z",
+              totalItems: 1,
+              startIndex: 1,
+              itemsPerPage: 1,
+              items: [
+                {
+                  id: 8,
+                  image:
+                    "https://preview.redd.it/find-both-crocs-v0-wdsa4yue626g1.jpeg?width=1080&crop=smart&auto=webp&s=620982e9d2765d40bec1bdfed76b68e98ff9c201",
+                  mission: "Find both crocs",
+                  type: "multiple unique",
+                  targets: [
+                    {
+                      id: 8,
+                      name: "Croc (animal)",
+                      locations:
+                        "[[[349, 249],[435,305]],[[416,270],[480,320]],[[455,288],[574,360]]]",
+                      missionId: 8,
+                    },
+                    {
+                      id: 15,
+                      name: "Croc (shoe)",
+                      locations: "[[[398,1070],[418.5,1092]]]",
+                      missionId: 8,
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          leaderboardJson: {
+            data: {
+              totalItems: 13,
+              startIndex: 1,
+              itemsPerPage: 10,
+              items: [
+                {
+                  id: 4,
+                  name: "Vinsonius",
+                  time: 1,
+                  date: "2026-05-15T18:25:24.750Z",
+                  missionId: 6,
+                },
+                {
+                  id: 5,
+                  name: "Waldinho",
+                  time: 1,
+                  date: "2026-05-15T18:25:24.750Z",
+                  missionId: 6,
+                },
+                {
+                  id: 6,
+                  name: "Pirate King",
+                  time: 1,
+                  date: "2026-05-15T18:25:24.750Z",
+                  missionId: 6,
+                },
+                {
+                  id: 7,
+                  name: "Vinson 2.0",
+                  time: 1.11,
+                  date: "2026-05-19T21:28:36.234Z",
+                  missionId: 6,
+                },
+                {
+                  id: 8,
+                  name: "Vinson 2.0",
+                  time: 111,
+                  date: "2026-05-19T22:47:50.403Z",
+                  missionId: 6,
+                },
+                {
+                  id: 9,
+                  name: "Vinson 2.0",
+                  time: 111,
+                  date: "2026-05-20T00:21:05.101Z",
+                  missionId: 6,
+                },
+                {
+                  id: 10,
+                  name: "Vinson 2.0",
+                  time: 111,
+                  date: "2026-05-20T00:21:05.699Z",
+                  missionId: 6,
+                },
+                {
+                  id: 11,
+                  name: "Vinson 2.0",
+                  time: 111,
+                  date: "2026-05-20T00:21:06.277Z",
+                  missionId: 6,
+                },
+                {
+                  id: 12,
+                  name: "Vinson 2.0",
+                  time: 111,
+                  date: "2026-05-20T00:21:06.833Z",
+                  missionId: 6,
+                },
+                {
+                  id: 13,
+                  name: "Vinson 2.0",
+                  time: 111,
+                  date: "2026-05-20T00:21:07.415Z",
+                  missionId: 6,
+                },
+              ],
+            },
+          },
+        }),
+      },
+    ];
+    const multipleUniqueRouter = createMemoryRouter(mockMultipleUniqueRoutes, {
+      initialEntries: ["/missions/8"],
+    });
+
+    const fetchMock = vi
+      .spyOn(window, "fetch")
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: vi.fn().mockResolvedValue({
+          data: {
+            updated: new Date(),
+            totalItems: 1,
+            startIndex: 1,
+            itemsPerPage: 1,
+            items: [
+              {
+                name: "Croc (animal)",
+                targetFound: true,
+                timeTaken: "0.03s",
+                rank: 21,
+              },
+            ],
+          },
+        }),
+      })
+      .mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: vi.fn().mockResolvedValue({
+          data: {
+            updated: new Date(),
+            totalItems: 1,
+            startIndex: 1,
+            itemsPerPage: 1,
+            items: [
+              {
+                name: "Croc (shoe)",
+                targetFound: true,
+                timeTaken: "0.02s",
+                rank: 19,
+              },
+            ],
+          },
+        }),
+      });
+    const user = UserEvent.setup();
+
+    render(<RouterProvider router={multipleUniqueRouter} />);
+
+    // Check for elements
+    const missionPicture = await screen.findByRole("img", {
+      name: /^Mission picture$/i,
+    });
+    const checkmarkList = await screen.findByRole("list", {
+      name: /^Checkmarks list$/i,
+    });
+    expect(missionPicture).toBeInTheDocument();
+    expect(screen.getByTestId("click-result")).toBeEmptyDOMElement();
+    expect(screen.queryByRole("form")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("overlay")).not.toBeInTheDocument();
+    expect(within(checkmarkList).queryAllByRole("listitem")).toHaveLength(0);
+    // for now it wants me to say 6, but let's say for the sake of testing it's actually 0!
+    expect(fetchMock).toHaveBeenCalledTimes(6);
+
+    // Find all targets
+    let targetDropdown;
+    let targetItems;
+
+    await user.pointer({
+      keys: "[MouseLeft]",
+      target: missionPicture,
+      coords: { x: 400, y: 250 },
+    });
+    targetDropdown = await screen.findByRole("list", {
+      name: /^Target dropdown$/i,
+    });
+    targetItems = within(targetDropdown).getAllByRole("button");
+
+    await user.click(targetItems[0]);
+    expect(
+      await screen.findByText(/^You found Croc \(animal\)$/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("list", { name: /^Target dropdown$/i }),
+    ).not.toBeInTheDocument();
+    expect(within(checkmarkList).queryAllByRole("listitem")).toHaveLength(1);
+    expect(fetchMock).toHaveBeenCalledTimes(7);
+
+    await user.pointer({
+      keys: "[MouseLeft]",
+      target: missionPicture,
+      coords: { x: 400, y: 1071 },
+    });
+    targetDropdown = await screen.findByRole("list", {
+      name: /^Target dropdown$/i,
+    });
+    targetItems = within(targetDropdown).getAllByRole("button");
+
+    await user.click(targetItems[0]);
+    expect(
+      await screen.findByText(/^You found Croc \(shoe\)$/i),
+    ).toBeInTheDocument();
+    expect(
+      screen.queryByRole("list", { name: /^Target dropdown$/i }),
+    ).not.toBeInTheDocument();
+    expect(within(checkmarkList).queryAllByRole("listitem")).toHaveLength(2);
+    expect(fetchMock).toHaveBeenCalledTimes(8);
+
+    // Completion modal signifies end of mission
+    expect(screen.getByTestId("overlay")).toBeInTheDocument();
+    const completedModal = screen.getByTestId("completed-modal");
+    expect(completedModal).toBeInTheDocument();
+  });
+
+  // main thing here is to expect only one target in the dropdown yet multiple checkmarks before completion
   // it("Works with multiple (same) targets");
-  // it("Shows checkmarks correctly");
+
+  // instead of individual checkmark tests we add it to the panda mission as well!
 });
