@@ -1053,7 +1053,285 @@ describe("Mission component", () => {
   });
 
   // main thing here is to expect only one target in the dropdown yet multiple checkmarks before completion
-  // it("Works with multiple (same) targets");
+  it("Works with multiple same targets", async () => {
+    const mockMultipleSameRoutes = [
+      {
+        path: "/missions/:missionId",
+        element: <Mission />,
+        loader: () => ({
+          missionJson: {
+            data: {
+              updated: "2026-06-13T14:29:26.471Z",
+              totalItems: 1,
+              startIndex: 1,
+              itemsPerPage: 1,
+              items: [
+                {
+                  id: 9,
+                  image:
+                    "https://preview.redd.it/find-the-3-gymnasts-v0-ihi87vu0yk8f1.jpeg?width=1080&crop=smart&auto=webp&s=fc3adf6a8735bb7bf05e90105355bf1206fa33e5",
+                  mission: "Find the 3 gymnasts",
+                  type: "multiple same",
+                  targets: [
+                    {
+                      id: 12,
+                      name: "Gymnast",
+                      locations:
+                        "[[[962.5,388],[977.5,413]],[[1032.5,380],[1045.5,396]],[[973.5,424],[977.5,432]]]",
+                      missionId: 9,
+                    },
+                    {
+                      id: 13,
+                      name: "Gymnast",
+                      locations: "[[[35.5,745],[55.5,755]]]",
+                      missionId: 9,
+                    },
+                    {
+                      id: 14,
+                      name: "Gymnast",
+                      locations:
+                        "[[[765,1032],[817.5,1058.5]],[[851.5,1031],[985.5,1082]],[[968.5,1080],[1082,1118]]]",
+                      missionId: 9,
+                    },
+                  ],
+                },
+              ],
+            },
+          },
+          leaderboardJson: {
+            data: {
+              totalItems: 13,
+              startIndex: 1,
+              itemsPerPage: 10,
+              items: [
+                {
+                  id: 4,
+                  name: "Vinsonius",
+                  time: 1,
+                  date: "2026-05-15T18:25:24.750Z",
+                  missionId: 6,
+                },
+                {
+                  id: 5,
+                  name: "Waldinho",
+                  time: 1,
+                  date: "2026-05-15T18:25:24.750Z",
+                  missionId: 6,
+                },
+                {
+                  id: 6,
+                  name: "Pirate King",
+                  time: 1,
+                  date: "2026-05-15T18:25:24.750Z",
+                  missionId: 6,
+                },
+                {
+                  id: 7,
+                  name: "Vinson 2.0",
+                  time: 1.11,
+                  date: "2026-05-19T21:28:36.234Z",
+                  missionId: 6,
+                },
+                {
+                  id: 8,
+                  name: "Vinson 2.0",
+                  time: 111,
+                  date: "2026-05-19T22:47:50.403Z",
+                  missionId: 6,
+                },
+                {
+                  id: 9,
+                  name: "Vinson 2.0",
+                  time: 111,
+                  date: "2026-05-20T00:21:05.101Z",
+                  missionId: 6,
+                },
+                {
+                  id: 10,
+                  name: "Vinson 2.0",
+                  time: 111,
+                  date: "2026-05-20T00:21:05.699Z",
+                  missionId: 6,
+                },
+                {
+                  id: 11,
+                  name: "Vinson 2.0",
+                  time: 111,
+                  date: "2026-05-20T00:21:06.277Z",
+                  missionId: 6,
+                },
+                {
+                  id: 12,
+                  name: "Vinson 2.0",
+                  time: 111,
+                  date: "2026-05-20T00:21:06.833Z",
+                  missionId: 6,
+                },
+                {
+                  id: 13,
+                  name: "Vinson 2.0",
+                  time: 111,
+                  date: "2026-05-20T00:21:07.415Z",
+                  missionId: 6,
+                },
+              ],
+            },
+          },
+        }),
+      },
+    ];
+    const multipleSameRouter = createMemoryRouter(mockMultipleSameRoutes, {
+      initialEntries: ["/missions/8"],
+    });
 
-  // instead of individual checkmark tests we add it to the panda mission as well!
+    const fetchMock = vi
+      .spyOn(window, "fetch")
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: vi.fn().mockResolvedValue({
+          data: {
+            updated: new Date(),
+            totalItems: 1,
+            startIndex: 1,
+            itemsPerPage: 1,
+            items: [
+              {
+                name: "gymnast",
+                targetFound: true,
+                timeTaken: "0.02s",
+                rank: 19,
+                id: 12,
+              },
+            ],
+          },
+        }),
+      })
+      .mockResolvedValueOnce({
+        ok: true,
+        status: 200,
+        json: vi.fn().mockResolvedValue({
+          data: {
+            updated: new Date(),
+            totalItems: 1,
+            startIndex: 1,
+            itemsPerPage: 1,
+            items: [
+              {
+                name: "gymnast",
+                targetFound: true,
+                timeTaken: "0.02s",
+                rank: 19,
+                id: 13,
+              },
+            ],
+          },
+        }),
+      })
+      .mockResolvedValue({
+        ok: true,
+        status: 200,
+        json: vi.fn().mockResolvedValue({
+          data: {
+            updated: new Date(),
+            totalItems: 1,
+            startIndex: 1,
+            itemsPerPage: 1,
+            items: [
+              {
+                name: "gymnast",
+                targetFound: true,
+                timeTaken: "0.02s",
+                rank: 19,
+                id: 14,
+              },
+            ],
+          },
+        }),
+      });
+    const user = UserEvent.setup();
+
+    render(<RouterProvider router={multipleSameRouter} />);
+
+    // Check for elements
+    const missionPicture = await screen.findByRole("img", {
+      name: /^Mission picture$/i,
+    });
+    const checkmarkList = await screen.findByRole("list", {
+      name: /^Checkmarks list$/i,
+    });
+    expect(missionPicture).toBeInTheDocument();
+    expect(screen.getByTestId("click-result")).toBeEmptyDOMElement();
+    expect(screen.queryByRole("form")).not.toBeInTheDocument();
+    expect(screen.queryByTestId("overlay")).not.toBeInTheDocument();
+    expect(within(checkmarkList).queryAllByRole("listitem")).toHaveLength(0);
+    // for now it wants me to say 8, but let's say for the sake of testing it's actually 0!
+    expect(fetchMock).toHaveBeenCalledTimes(8);
+
+    // Find all targets
+    let targetDropdown;
+    let targetItems;
+
+    await user.pointer({
+      keys: "[MouseLeft]",
+      target: missionPicture,
+      coords: { x: 970, y: 400 },
+    });
+    targetDropdown = await screen.findByRole("list", {
+      name: /^Target dropdown$/i,
+    });
+    targetItems = within(targetDropdown).getAllByRole("button");
+    expect(targetItems).toHaveLength(1);
+
+    await user.click(targetItems[0]);
+    expect(await screen.findByText(/^You found gymnast$/i)).toBeInTheDocument();
+    expect(
+      screen.queryByRole("list", { name: /^Target dropdown$/i }),
+    ).not.toBeInTheDocument();
+    expect(within(checkmarkList).queryAllByRole("listitem")).toHaveLength(1);
+    expect(fetchMock).toHaveBeenCalledTimes(9);
+
+    await user.pointer({
+      keys: "[MouseLeft]",
+      target: missionPicture,
+      coords: { x: 40, y: 754 },
+    });
+    targetDropdown = await screen.findByRole("list", {
+      name: /^Target dropdown$/i,
+    });
+    targetItems = within(targetDropdown).getAllByRole("button");
+    expect(targetItems).toHaveLength(1);
+
+    await user.click(targetItems[0]);
+    expect(await screen.findByText(/^You found gymnast$/i)).toBeInTheDocument();
+    expect(
+      screen.queryByRole("list", { name: /^Target dropdown$/i }),
+    ).not.toBeInTheDocument();
+    expect(within(checkmarkList).queryAllByRole("listitem")).toHaveLength(2);
+    expect(fetchMock).toHaveBeenCalledTimes(10);
+
+    await user.pointer({
+      keys: "[MouseLeft]",
+      target: missionPicture,
+      coords: { x: 852, y: 1032 },
+    });
+    targetDropdown = await screen.findByRole("list", {
+      name: /^Target dropdown$/i,
+    });
+    targetItems = within(targetDropdown).getAllByRole("button");
+    expect(targetItems).toHaveLength(1);
+
+    await user.click(targetItems[0]);
+    expect(await screen.findByText(/^You found gymnast$/i)).toBeInTheDocument();
+    expect(
+      screen.queryByRole("list", { name: /^Target dropdown$/i }),
+    ).not.toBeInTheDocument();
+    expect(within(checkmarkList).queryAllByRole("listitem")).toHaveLength(3);
+    expect(fetchMock).toHaveBeenCalledTimes(11);
+
+    // Completion modal signifies end of mission
+    expect(screen.getByTestId("overlay")).toBeInTheDocument();
+    const completedModal = screen.getByTestId("completed-modal");
+    expect(completedModal).toBeInTheDocument();
+  });
 });
