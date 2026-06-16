@@ -86,7 +86,6 @@
 .markers img {
   position: absolute;
   width: 35px;
-  transform: translate(50%, -50%);
   border: none;
 }
 
@@ -353,7 +352,6 @@
   }
 
   .imageContainer img {
-    max-width: 100%;
     height: auto;
   }
 }

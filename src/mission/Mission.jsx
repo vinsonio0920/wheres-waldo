@@ -128,7 +128,7 @@ const TargetDropdown = ({
             return {
               ...target,
               sniped: true,
-              snipedCoords: clickCoordinates,
+              snipedCoords: dropdownCoordinates,
             };
           } else {
             return target;
@@ -184,7 +184,7 @@ const TargetDropdown = ({
             return {
               ...target,
               sniped: true,
-              snipedCoords: clickCoordinates,
+              snipedCoords: dropdownCoordinates,
             };
           } else {
             return target;
@@ -269,17 +269,20 @@ const Mission = () => {
     const handleClick = (event) => {
       if (event.target.classList.contains("missionPicture")) {
         const containerRect = event.target.parentNode.getBoundingClientRect();
-        const imageRect = event.target.getBoundingClientRect();
+        const imageWidth = event.target.naturalWidth + 2;
 
         setShowTargetDropdown(true);
-        setDropdownCoordinates([
-          event.clientX - containerRect.left,
-          event.clientY - containerRect.top,
-        ]);
-        setClickCoordinates([
-          event.clientX - imageRect.left,
-          event.clientY - imageRect.top,
-        ]);
+        if (window.innerWidth > imageWidth) {
+          // simply get the image click coordinates
+          setDropdownCoordinates([
+            event.clientX - containerRect.left,
+            event.clientY - containerRect.top,
+          ]);
+        } else {
+          // account for image container's extra space
+          setDropdownCoordinates([event.offsetX, event.offsetY]);
+        }
+        setClickCoordinates([event.offsetX, event.offsetY]);
       } else {
         setShowTargetDropdown(false);
       }
@@ -377,8 +380,8 @@ const Mission = () => {
                       src={checkmarkPng}
                       width="30"
                       style={{
-                        left: target.snipedCoords[0],
-                        top: target.snipedCoords[1],
+                        left: target.snipedCoords[0] - 15,
+                        top: target.snipedCoords[1] - 15,
                       }}
                       alt="Checkmark marker"
                     ></img>
