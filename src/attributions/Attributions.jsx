@@ -51,6 +51,24 @@ const Attributions = () => {
             Brightside
           </a>
         </li>
+        <li>
+          Checkmark photo by{" "}
+          <a
+            target="_blank"
+            href="https://www.cleanpng.com/users/@opuama.html"
+            rel="noopener noreferrer"
+          >
+            Opuama
+          </a>{" "}
+          on{" "}
+          <a
+            target="_blank"
+            href="https://www.cleanpng.com/"
+            rel="noopener noreferrer"
+          >
+            CleanPNG
+          </a>
+        </li>
       </ul>
     </div>
   );
