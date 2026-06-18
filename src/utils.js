@@ -29,7 +29,7 @@ function formatTime(time) {
         .replace(/\./, ":")}m`;
     } else {
       formattedTime = `${numberFormat
-        .format(time / minute)
+        .format(time / 1000)
         .toString()
         .replace(/\./, ":")}s`;
     }
